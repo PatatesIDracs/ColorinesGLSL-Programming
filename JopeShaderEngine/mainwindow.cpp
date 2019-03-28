@@ -10,8 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
-    //ui->openGLWidget = new OpenGLWidget();
+    openGLWidget = new OpenGLWidget(this);
 }
 
 MainWindow::~MainWindow()

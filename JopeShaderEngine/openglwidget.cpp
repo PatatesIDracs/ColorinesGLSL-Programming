@@ -1,9 +1,11 @@
 #include "openglwidget.h"
+#include <iostream>
 
-
-OpenGLWidget::OpenGLWidget(QWidget* parent): QOpenGLWidget (parent)
+OpenGLWidget::OpenGLWidget(QWidget* parent):
+    QOpenGLWidget (parent)
 {
     setMinimumSize(QSize(256,256));
+
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -19,8 +21,8 @@ void OpenGLWidget::initializeGL()
     connect(context(), SIGNAL(aboutToBeDestroyed), this, SLOT(finalizeGL()));
 
     program.create();
-    program.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/JopeShaderEngine/shader1_vert");
-    program.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/JopeShaderEngine/shader1_frag");
+    program.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader2_frag.frag");
+    program.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader2_vert.vert");
     program.link();
     program.bind();
 
