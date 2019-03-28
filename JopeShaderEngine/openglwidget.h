@@ -2,11 +2,11 @@
 #define OPENGLWIDGET_H
 
 #include <QOpenGLWidget>
-#include <qopenglfunctions_3_3_core.h>
+#include <QOpenGLFunctions_3_3_Core>
 
-class QOpenGLBuffer;
-class QOpenGLVertexArrayObject;
-class QOpenGLShaderProgram;
+#include <QOpenGLBuffer>
+#include <QOpenGLVertexArrayObject>
+#include <QOpenGLShaderProgram>
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
@@ -29,9 +29,9 @@ public slots:
 
 private:
 
-    QOpenGLBuffer* vbo;
-    QOpenGLVertexArrayObject* vao;
-    QOpenGLShaderProgram* program;
+    QOpenGLBuffer vbo;
+    QOpenGLVertexArrayObject vao;
+    QOpenGLShaderProgram program;
 
 };
 
