@@ -18,11 +18,11 @@ void OpenGLWidget::initializeGL()
 {
     initializeOpenGLFunctions();
 
-    connect(context(), SIGNAL(aboutToBeDestroyed), this, SLOT(finalizeGL()));
+    connect(context(), SIGNAL(aboutToBeDestroyed()), this, SLOT(finalizeGL()));
 
     program.create();
-    program.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader2_frag.frag");
-    program.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader2_vert.vert");
+    program.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader1_vert.vert");
+    program.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader1_frag.frag");
     program.link();
     program.bind();
 
@@ -61,6 +61,7 @@ void OpenGLWidget::resizeGL(int w, int h)
 
 void OpenGLWidget::paintGL()
 {
+    std::cout << "PaintGL" << std::endl;
     glClearColor(0.9f,0.85f,1.0f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
