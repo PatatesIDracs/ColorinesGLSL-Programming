@@ -11,6 +11,7 @@ class Hierarchy;
 
 class Inspector;
 class GameObject;
+class Resource;
 
 class Hierarchy : public QWidget
 {
@@ -35,11 +36,15 @@ public slots:
     void OpenScene();
     void SaveScene();
 
+    void OpenFile();
+
 public:
     Inspector* inspector;
 private:
     Ui::Hierarchy *ui;
     QVector<GameObject*> objects;
+
+    QVector<Resource*> resources;
 
     GameObject* selected;
 

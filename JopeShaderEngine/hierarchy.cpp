@@ -1,11 +1,18 @@
 #include "hierarchy.h"
 #include "ui_hierarchy.h"
 #include "gameobject.h"
+#include "resource.h"
+#include "resourcemesh.h"
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #include <QFileDialog>
 #include <QDir>
 
 #include <iostream>
+
 
 Hierarchy::Hierarchy(QWidget *parent) :
     QWidget(parent),
@@ -188,4 +195,46 @@ void Hierarchy::SaveScene()
     }
 
     f.close();
+}
+
+void Hierarchy::OpenFile()
+{
+    QString file_name = QFileDialog::getOpenFileName(this, "Open a file", QDir::homePath());
+
+    if(file_name.isNull())
+    {
+        std::cout << "File NULL" << std::endl;
+    }
+
+
+
+    /*
+    QFile f(file_name);
+
+    if(!f.open(QFile::ReadOnly))
+    {
+        return;
+    }
+
+    QByteArray data = f.readAll();
+
+    Assimp::Importer import;
+
+    const aiScene *scene = import.ReadFileFromMemory(
+                data.data(), data.size(),
+                aiProcess_Triangulate|
+                aiProcess_FlipUVs|
+                aiProcess_GenSmoothNormals|
+                aiProcess_OptimizeMeshes|
+                aiProcess_PreTransformVertices|
+                aiProcess_ImproveCacheLocality,
+                ".obj0");
+
+    if(!scene || scene->mFlags && AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    {
+        return;
+    }
+    */
+
+
 }

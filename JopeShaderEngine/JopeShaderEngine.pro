@@ -34,7 +34,9 @@ SOURCES += \
     component.cpp \
     comptransform.cpp \
     compcamera.cpp \
-    transformui.cpp
+    transformui.cpp \
+    resource.cpp \
+    resourcemesh.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -45,7 +47,9 @@ HEADERS += \
     component.h \
     comptransform.h \
     compcamera.h \
-    transformui.h
+    transformui.h \
+    resource.h \
+    resourcemesh.h
 
 FORMS += \
         mainwindow.ui \
@@ -66,5 +70,5 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimpd
 else:unix: LIBS += -L$$PWD/Assimp/lib/ -lassimp
 
-INCLUDEPATH += $$PWD/Assimp/include
-DEPENDPATH += $$PWD/Assimp/include
+INCLUDEPATH += $$PWD/
+DEPENDPATH += $$PWD/
