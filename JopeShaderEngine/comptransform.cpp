@@ -1,14 +1,31 @@
 #include "comptransform.h"
+#include "transformui.h"
+#include <QVBoxLayout>
+#include <iostream>
 
 CompTransform::CompTransform(GameObject* parent) : Component(parent, COMP_TRANSFORM)
 {
     transformLocal.setToIdentity();
     transformGlobal.setToIdentity();
+    transformUI = new TransformUI();
 }
 
 CompTransform::~CompTransform()
 {
 
+}
+
+void CompTransform::SetInspectorLayout(QVBoxLayout *inspectorLayout)
+{
+    std::cout << "Adding trans ui" << std::endl;
+    inspectorLayout->addWidget(transformUI);
+    transformUI->show();
+}
+
+void CompTransform::HideInspectorLayout(QVBoxLayout *inspector_layout)
+{
+    inspector_layout->removeWidget(transformUI);
+    transformUI->hide();
 }
 
 const QMatrix4x4 CompTransform::GetLocalTransform() const

@@ -24,6 +24,7 @@ public:
     void DrawHierarchy(QWidget* scene);
 
 signals:
+     void SigHierarchyUpdate(GameObject*);
 
 public slots:
     void CreateNewGO();

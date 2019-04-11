@@ -9,6 +9,7 @@
 #include <QComboBox>
 #include <QDoubleSpinBox>
 #include <iostream>
+#include "transformui.h"
 
 
 Inspector::Inspector(QWidget *parent) :
@@ -19,23 +20,41 @@ Inspector::Inspector(QWidget *parent) :
     name = new QLineEdit();
     spacer = new QSpacerItem(1,1,QSizePolicy::Expanding,QSizePolicy::Expanding);
 
-
-
-
     //Set the layout
     layout = new QVBoxLayout;
     layout->addWidget(name);
     layout->addItem(spacer);
     setLayout(layout);
 
-
     //Slot connections
     connect(name,SIGNAL(editingFinished()),this, SLOT(TextChanged()));
-
 }
 
 Inspector::~Inspector()
 {
+}
+
+void Inspector::SetSelectedGO(GameObject *selected)
+{
+    if(current_go != nullptr)
+    {
+        layout->removeItem(spacer);
+        current_go->HideInspectorLayout(layout);
+        layout->addItem(spacer);
+    }
+
+    current_go = selected;
+    name->setText(current_go->name);
+    layout->removeItem(spacer);
+    current_go->SetInspectorLayout(layout);
+
+    layout->addItem(spacer);
+
+}
+
+void Inspector::ItemSelected(GameObject *selected)
+{
+    SetSelectedGO(selected);
 }
 
 void Inspector::TextChanged()

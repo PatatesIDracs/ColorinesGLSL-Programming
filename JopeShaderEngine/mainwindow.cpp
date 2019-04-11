@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(inspector,SIGNAL(SigNameChanged()), hierarchy, SLOT(OnNameChanged()));
 
     connect(ui->actionOpenFile, SIGNAL(triggered()), hierarchy, SLOT(OpenFile()));
-
+    connect(hierarchy,SIGNAL(SigHierarchyUpdate(GameObject*)), inspector, SLOT(ItemSelected(GameObject*)));
 }
 
 MainWindow::~MainWindow()

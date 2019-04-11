@@ -9,3 +9,13 @@ Component::~Component()
 {
 
 }
+
+void Component::SetInspectorLayout(QVBoxLayout *inspectorLayout)
+{
+    return;
+}
+
+void Component::HideInspectorLayout(QVBoxLayout *inspector_layout)
+{
+    return;
+}

@@ -17,6 +17,10 @@ public:
 
 private:
     Ui::TransformUI *ui;
+
+
+signals:
+    void SigTransformUpdate();
 };
 
 #endif // TRANSFORMUI_H

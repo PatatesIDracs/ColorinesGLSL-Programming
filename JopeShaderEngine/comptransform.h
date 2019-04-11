@@ -6,12 +6,17 @@
 #include <QVector3D>
 #include <QQuaternion>
 
-class CompTransform : Component
+class TransformUI;
+
+class CompTransform : public Component
 {
 
 public:
     CompTransform(GameObject* parent);
     ~CompTransform();
+
+    void SetInspectorLayout(QVBoxLayout* inspectorLayout);
+    void HideInspectorLayout(QVBoxLayout* inspector_layout);
 
     //Getters
     const QMatrix4x4 GetLocalTransform() const;
@@ -40,6 +45,7 @@ private:
     QVector3D rotAngles = QVector3D(0,0,0);
     QVector3D scale = QVector3D(1,1,1);
 
+    TransformUI* transformUI;
 
 };
 

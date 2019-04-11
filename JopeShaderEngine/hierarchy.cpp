@@ -83,6 +83,7 @@ void Hierarchy::OnItemClicked()
             break;
         }
     }
+    emit SigHierarchyUpdate(selected);
 }
 
 void Hierarchy::OnNameChanged()

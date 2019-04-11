@@ -19,6 +19,10 @@ public:
     explicit Inspector(QWidget *parent = nullptr);
     ~Inspector();
 
+    void SetGoLayout();
+
+    void SetSelectedGO(GameObject* selected);
+
 signals:
 
     void SigNameChanged();
@@ -31,7 +35,7 @@ public:
     GameObject* current_go = nullptr;
 
 public slots:
-
+    void ItemSelected(GameObject* selected);
     void TextChanged();
 };
 
