@@ -30,14 +30,18 @@ SOURCES += \
     openglwidget.cpp \
     gameobject.cpp \
     hierarchy.cpp \
-    inspector.cpp
+    inspector.cpp \
+    component.cpp \
+    comptransform.cpp
 
 HEADERS += \
         mainwindow.h \
     openglwidget.h \
     gameobject.h \
     hierarchy.h \
-    inspector.h
+    inspector.h \
+    component.h \
+    comptransform.h
 
 FORMS += \
         mainwindow.ui \
