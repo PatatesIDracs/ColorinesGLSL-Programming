@@ -15,11 +15,11 @@ enum COMP_TYPE
 class Component
 {
 public:
-    Component();
+    Component(GameObject* parent, COMP_TYPE type);
     virtual ~Component();
 
 
-protected:
+public:
     GameObject* parent;
 
     COMP_TYPE type = COMP_UNKNOWN;

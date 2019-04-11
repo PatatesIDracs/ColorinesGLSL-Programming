@@ -1,11 +1,92 @@
 #include "comptransform.h"
 
-CompTransform::CompTransform()
+CompTransform::CompTransform(GameObject* parent) : Component(parent, COMP_TRANSFORM)
 {
-
+    transformLocal.setToIdentity();
+    transformGlobal.setToIdentity();
 }
 
 CompTransform::~CompTransform()
 {
-    type = COMP_TRANSFORM;
+
 }
+
+const QMatrix4x4 CompTransform::GetLocalTransform() const
+{
+    return transformLocal;
+}
+
+const QMatrix4x4 CompTransform::GetGlobalTransform() const
+{
+    return transformGlobal;
+}
+
+const QQuaternion CompTransform::GetRotQuat() const
+{
+    return rotation;
+}
+
+const QVector3D CompTransform::GetRotAngles() const
+{
+    return rotAngles;
+}
+
+const QVector3D CompTransform::GetPosition() const
+{
+    return position;
+}
+
+const QVector3D CompTransform::GetScale() const
+{
+    return scale;
+}
+
+void CompTransform::SetTransform(QMatrix4x4 newTransform)
+{
+    transformLocal = newTransform;
+    transformGlobal = newTransform;
+}
+
+void CompTransform::SetTransform(QVector3D pos, QQuaternion rot)
+{
+    position = pos;
+    rotation = rot.normalized();
+    rotAngles = rotation.toEulerAngles();
+
+    ReCalculateTransform();
+}
+
+void CompTransform::SetPosition(QVector3D newPos)
+{
+    position = newPos;
+    ReCalculateTransform();
+}
+
+void CompTransform::SetRotation(QQuaternion newRot)
+{
+    rotation = newRot;
+    rotAngles = rotation.toEulerAngles();
+    ReCalculateTransform();
+}
+
+void CompTransform::SetEulerRotation(QVector3D newEulerAngles)
+{
+    rotAngles = newEulerAngles;
+    rotation = QQuaternion::fromEulerAngles(rotAngles);
+    ReCalculateTransform();
+}
+
+void CompTransform::SetScale(QVector3D newScale)
+{
+    scale = newScale;
+    ReCalculateTransform();
+}
+
+void CompTransform::ReCalculateTransform()
+{
+    transformLocal.setToIdentity();
+    transformLocal.translate(position);
+    transformLocal.rotate(rotation);
+    transformLocal.scale(scale);
+}
+
