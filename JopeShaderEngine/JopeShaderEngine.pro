@@ -33,7 +33,8 @@ SOURCES += \
     inspector.cpp \
     component.cpp \
     comptransform.cpp \
-    compcamera.cpp
+    compcamera.cpp \
+    transformui.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,11 +44,13 @@ HEADERS += \
     inspector.h \
     component.h \
     comptransform.h \
-    compcamera.h
+    compcamera.h \
+    transformui.h
 
 FORMS += \
         mainwindow.ui \
-    hierarchy.ui
+    hierarchy.ui \
+    transformui.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

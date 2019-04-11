@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TransformUI</class>
+ <widget class="QWidget" name="TransformUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>333</width>
+    <height>129</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="transfromGroup">
+     <property name="title">
+      <string>GroupBox</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <layout class="QHBoxLayout" name="positionLayout">
+        <item>
+         <widget class="QLabel" name="positionLabel">
+          <property name="text">
+           <string>Position</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="posYSpinBox"/>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="posXSpinBox"/>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="posZSpinBox"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="rotationLayout">
+        <item>
+         <widget class="QLabel" name="rotationLabel">
+          <property name="text">
+           <string>Rotation</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="rotYSpinBox"/>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="rotXSpinBox"/>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="rotZSpinBox"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="scaleLayout">
+        <item>
+         <widget class="QLabel" name="scaleLabel">
+          <property name="text">
+           <string>Scale</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="scaleYSpinBox"/>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="scaleXSpinBox"/>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="scaleZSpinBox"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
