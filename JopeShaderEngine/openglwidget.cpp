@@ -4,7 +4,8 @@
 OpenGLWidget::OpenGLWidget(QWidget* parent):
     QOpenGLWidget (parent)
 {
-    setMinimumSize(QSize(256,256));
+
+    setMinimumSize(parent->window()->size());
 
 }
 
@@ -56,13 +57,12 @@ void OpenGLWidget::initializeGL()
 
 void OpenGLWidget::resizeGL(int w, int h)
 {
-
+    resize(w,h);
 }
 
 void OpenGLWidget::paintGL()
 {
-    std::cout << "PaintGL" << std::endl;
-    glClearColor(0.9f,0.85f,1.0f,1.0f);
+    glClearColor(0.0f,0.0f,0.0f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     if(program.bind())
@@ -77,7 +77,9 @@ void OpenGLWidget::paintGL()
 
 void OpenGLWidget::finalizeGL()
 {
-
+    vao.release();
+    vbo.release();
+    program.release();
 }
 
 

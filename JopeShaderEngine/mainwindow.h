@@ -9,6 +9,9 @@ namespace Ui {
 class MainWindow;
 }
 
+class Hierarchy;
+class Inspector;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -17,10 +20,13 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private:
-    Ui::MainWindow *ui;
+    void resizeEvent(QResizeEvent* event) override;
 
-    OpenGLWidget* openGLWidget;
+private:
+    Ui::MainWindow  *ui;
+
+    Hierarchy   *hierarchy;
+    Inspector   *inspector;
 };
 
 #endif // MAINWINDOW_H

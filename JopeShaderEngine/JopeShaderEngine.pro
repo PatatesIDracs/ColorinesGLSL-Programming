@@ -27,14 +27,21 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    openglwidget.cpp
+    openglwidget.cpp \
+    gameobject.cpp \
+    hierarchy.cpp \
+    inspector.cpp
 
 HEADERS += \
         mainwindow.h \
-    openglwidget.h
+    openglwidget.h \
+    gameobject.h \
+    hierarchy.h \
+    inspector.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    hierarchy.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
