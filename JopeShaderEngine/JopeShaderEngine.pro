@@ -32,7 +32,8 @@ SOURCES += \
     hierarchy.cpp \
     inspector.cpp \
     component.cpp \
-    comptransform.cpp
+    comptransform.cpp \
+    compcamera.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,7 +42,8 @@ HEADERS += \
     hierarchy.h \
     inspector.h \
     component.h \
-    comptransform.h
+    comptransform.h \
+    compcamera.h
 
 FORMS += \
         mainwindow.ui \
@@ -56,3 +58,10 @@ DISTFILES += \
     shader1_vert.vert \
     shader1_frag.frag
 
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimp
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimpd
+else:unix: LIBS += -L$$PWD/Assimp/lib/ -lassimp
+
+INCLUDEPATH += $$PWD/Assimp/include
+DEPENDPATH += $$PWD/Assimp/include
