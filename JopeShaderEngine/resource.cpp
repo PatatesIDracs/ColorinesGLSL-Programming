@@ -1,23 +1,14 @@
 #include "resource.h"
 
-Resource::Resource(RESOURCE_TYPE newType) : type(newType)
+Resource::Resource(RESOURCE_TYPE newType, unsigned int newId) : type(newType), id(newId)
 {
 
 }
 
 Resource::~Resource()
 {
-
-}
-
-void Resource::LoadResource()
-{
-
-}
-
-void Resource::UnloadResource()
-{
-
+    if(isLoaded())
+        UnloadResource();
 }
 
 void Resource::AddInstance()

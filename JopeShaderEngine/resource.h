@@ -12,11 +12,13 @@ enum RESOURCE_TYPE
 class Resource
 {
 public:
-    Resource(RESOURCE_TYPE type);
+    Resource(RESOURCE_TYPE type, unsigned int id);
     ~Resource();
 
-    virtual void LoadResource();
-    virtual void UnloadResource();
+    unsigned int Id(){ return id; }
+
+    virtual void LoadResource(){}
+    virtual void UnloadResource(){}
 
     void AddInstance();
     void RemoveInstance();
@@ -26,6 +28,8 @@ private:
 
 private:
     RESOURCE_TYPE type;
+
+    unsigned int id = 0;
 
     unsigned int count = 0;
 };

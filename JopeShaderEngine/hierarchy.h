@@ -42,13 +42,15 @@ public:
     Inspector* inspector;
 private:
     Ui::Hierarchy *ui;
+
     QVector<GameObject*> objects;
+    GameObject* selected;
+    uint count;
 
     QVector<Resource*> resources;
+    uint resourceCount;
 
-    GameObject* selected;
 
-    uint count;
 private:
     void PrintObjects();
 
