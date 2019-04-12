@@ -3,8 +3,8 @@
 
 #include "resource.h"
 
-class aiNode;
-class aiScene;
+struct aiNode;
+struct aiScene;
 //class subMesh;
 
 class ResourceMesh : public Resource

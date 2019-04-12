@@ -44,7 +44,7 @@ bool ResourceMesh::LoadModel(const char *fileName)
                 aiProcess_OptimizeMeshes|
                 aiProcess_PreTransformVertices|
                 aiProcess_ImproveCacheLocality,
-                ".obj0");
+                ".obj");
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
