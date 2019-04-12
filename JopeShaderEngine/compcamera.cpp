@@ -1,6 +1,6 @@
 #include "compcamera.h"
 
-CompCamera::CompCamera() : Component(parent, COMP_CAMERA)
+CompCamera::CompCamera(GameObject* parent) : Component(parent, COMP_CAMERA)
 {
 }
 

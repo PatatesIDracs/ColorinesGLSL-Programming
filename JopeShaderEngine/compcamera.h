@@ -18,7 +18,7 @@ class QVector4D;
 class CompCamera : Component
 {
 public:
-    CompCamera();
+    CompCamera(GameObject* parent);
     ~CompCamera();
 
     QVector4D getLeftRightBottomTop();

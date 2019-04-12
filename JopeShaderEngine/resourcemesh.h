@@ -1,7 +1,7 @@
 #ifndef RESOURCEMESH_H
 #define RESOURCEMESH_H
 
-#include "Resource.h"
+#include "resource.h"
 
 class aiNode;
 class aiScene;
@@ -11,6 +11,7 @@ class ResourceMesh : public Resource
 {
 public:
     ResourceMesh(unsigned int id);
+    ~ResourceMesh(){}
 
     void LoadResource();
     void UnloadResource();

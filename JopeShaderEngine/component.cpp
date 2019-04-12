@@ -1,5 +1,7 @@
 #include "component.h"
 
+#include <QVBoxLayout>
+
 Component::Component(GameObject* parent, COMP_TYPE type) : parent(parent), type(type)
 {
 

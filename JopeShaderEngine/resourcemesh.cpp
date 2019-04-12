@@ -5,7 +5,6 @@
 #include <assimp/postprocess.h>
 
 #include <QFileDialog>
-#include <QDir>
 
 ResourceMesh::ResourceMesh(unsigned int id) : Resource(RESOURCE_TYPE::RESOURCE_MESH, id)
 {
@@ -28,9 +27,11 @@ bool ResourceMesh::LoadModel(const char *fileName)
 
     if(!f.open(QFile::ReadOnly))
     {
+        f.close();
         return false;
     }
 
+    //
     QByteArray data = f.readAll();
 
     Assimp::Importer import;
@@ -45,7 +46,7 @@ bool ResourceMesh::LoadModel(const char *fileName)
                 aiProcess_ImproveCacheLocality,
                 ".obj0");
 
-    if(!scene || scene->mFlags && AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         return false;
     }

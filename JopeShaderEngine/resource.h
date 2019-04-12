@@ -8,12 +8,11 @@ enum RESOURCE_TYPE
     RESOURCE_TEXTURE
 };
 
-
 class Resource
 {
 public:
     Resource(RESOURCE_TYPE type, unsigned int id);
-    ~Resource();
+    virtual ~Resource();
 
     unsigned int Id(){ return id; }
 

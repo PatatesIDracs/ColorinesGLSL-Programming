@@ -65,10 +65,8 @@ DISTFILES += \
     shader1_vert.vert \
     shader1_frag.frag
 
-
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimpd
-else:unix: LIBS += -L$$PWD/Assimp/lib/ -lassimp
 
-INCLUDEPATH += $$PWD/
-DEPENDPATH += $$PWD/
+INCLUDEPATH += $$PWD/Assimp/include
+DEPENDPATH += $$PWD/Assimp/include

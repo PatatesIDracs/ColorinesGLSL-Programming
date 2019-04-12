@@ -1,7 +1,6 @@
 #include "hierarchy.h"
 #include "ui_hierarchy.h"
 #include "gameobject.h"
-#include "resource.h"
 #include "resourcemesh.h"
 
 #include <QFileDialog>
@@ -186,7 +185,7 @@ void Hierarchy::SaveScene()
 
     outstream.setVersion(QDataStream::Qt_4_0);
 
-    for(uint i = 0; i < objects.size(); i++)
+    for(int i = 0; i < objects.size(); i++)
     {
         objects[i]->Save(outstream);
     }
@@ -203,12 +202,12 @@ void Hierarchy::OpenFile()
         std::cout << "File NULL" << std::endl;
     }
 
-    /*
+
     resourceCount++;
     ResourceMesh* mesh = new ResourceMesh(resourceCount);
-
-    mesh->LoadModel((const char*)file_name.data());
+/*
+    mesh->LoadModel((const char*)file_name.data());*/
     resources.push_back(mesh);
-    */
+
 
 }
