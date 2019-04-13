@@ -2,10 +2,13 @@
 #define RESOURCEMESH_H
 
 #include "resource.h"
+#include "submesh.h"
+
+#include <QVector>
 
 struct aiNode;
 struct aiScene;
-//class subMesh;
+struct aiMesh;
 
 class ResourceMesh : public Resource
 {
@@ -20,7 +23,11 @@ public:
 
 private:
     void ProcessNode(aiNode* node, const aiScene* scene);
-    //SubMesh* processMesh(aiMesh* mesh, const aiScene* scene);
+    SubMesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
+
+public:
+
+    QVector<SubMesh*> submeshes;
 };
 
 #endif // RESOURCEMESH_H

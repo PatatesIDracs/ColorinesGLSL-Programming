@@ -36,7 +36,8 @@ SOURCES += \
     compcamera.cpp \
     transformui.cpp \
     resource.cpp \
-    resourcemesh.cpp
+    resourcemesh.cpp \
+    submesh.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -49,7 +50,9 @@ HEADERS += \
     compcamera.h \
     transformui.h \
     resource.h \
-    resourcemesh.h
+    resourcemesh.h \
+    submesh.h \
+    vertexformat.h
 
 FORMS += \
         mainwindow.ui \
