@@ -37,7 +37,9 @@ SOURCES += \
     transformui.cpp \
     resource.cpp \
     resourcemesh.cpp \
-    submesh.cpp
+    submesh.cpp \
+    compmeshrenderer.cpp \
+    meshrendererui.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -52,12 +54,15 @@ HEADERS += \
     resource.h \
     resourcemesh.h \
     submesh.h \
-    vertexformat.h
+    vertexformat.h \
+    compmeshrenderer.h \
+    meshrendererui.h
 
 FORMS += \
         mainwindow.ui \
     hierarchy.ui \
-    transformui.ui
+    transformui.ui \
+    meshrendererui.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
