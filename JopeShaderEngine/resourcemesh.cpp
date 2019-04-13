@@ -14,12 +14,19 @@ ResourceMesh::ResourceMesh(unsigned int id) : Resource(RESOURCE_TYPE::RESOURCE_M
 
 void ResourceMesh::LoadResource()
 {
-
+    for(int i = 0; i < submeshes.size(); i++)
+    {
+         submeshes[i]->Update();
+    }
 }
 
 void ResourceMesh::UnloadResource()
 {
-
+    for(int i = 0; i < submeshes.size(); i++)
+    {
+        delete submeshes[i];
+    }
+    submeshes.clear();
 }
 
 bool ResourceMesh::LoadModel(const char *fileName)
@@ -109,7 +116,11 @@ SubMesh *ResourceMesh::ProcessMesh(aiMesh *mesh, const aiScene *scene)
         }
     }
 
-    return nullptr;
+    VertexFormat vertexFormat;
+    vertexFormat.SetVertexAttribute(0,0,3);
+    vertexFormat.SetVertexAttribute(1,3*sizeof(float), 3);
+    if(hasTexCoords)
+        vertexFormat.SetVertexAttribute(2,6*sizeof(float), 2);
 
-
+    return new SubMesh(vertexFormat, &vertices[0], vertices.size()*sizeof(float), &indices[0], indices.size());
 }

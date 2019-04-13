@@ -22,15 +22,17 @@ public:
     void AddInstance();
     void RemoveInstance();
 
-private:
-    bool isLoaded() { return count > 0; }
+    bool isLoaded() { return loaded; }
+    unsigned int numInstances() { return count; }
 
 private:
     RESOURCE_TYPE type;
 
     unsigned int id = 0;
 
+    bool loaded = false;
     unsigned int count = 0;
+
 };
 
 #endif // RESOURCE_H

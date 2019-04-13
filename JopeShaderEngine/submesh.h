@@ -3,7 +3,8 @@
 
 #include "vertexformat.h"
 
-#include <QOpenGLFunctions_3_3_Core>
+//#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
 
@@ -21,8 +22,8 @@ public:
 
 public:
 
-    unsigned char* vertices;
-    size_t verticesSize = 0;
+    unsigned char* data;
+    size_t dataSize = 0;
 
     unsigned int* indices;
     size_t indicesSize = 0;

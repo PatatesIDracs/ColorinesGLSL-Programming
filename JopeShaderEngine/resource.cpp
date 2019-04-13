@@ -13,7 +13,7 @@ Resource::~Resource()
 
 void Resource::AddInstance()
 {
-    if(count == 0)
+    if(!loaded)
         LoadResource();
 
     count++;
@@ -23,9 +23,4 @@ void Resource::RemoveInstance()
 {
     if(count > 0)
         count--;
-
-
-    if(count == 0)
-        UnloadResource();
-
 }

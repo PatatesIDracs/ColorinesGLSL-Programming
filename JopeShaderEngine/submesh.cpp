@@ -6,8 +6,8 @@ SubMesh::SubMesh(VertexFormat newVertexFormat, void *data, int vSize)
 
     vertexFormat = newVertexFormat;
 
-    memcpy(vertices, data, vSize);
-    verticesSize = vSize;
+    memcpy(data, data, vSize);
+    dataSize = vSize;
 
 }
 
@@ -17,8 +17,8 @@ SubMesh::SubMesh(VertexFormat newVertexFormat, void *data, int vSize, unsigned i
 
     vertexFormat = newVertexFormat;
 
-    memcpy(vertices, data, vSize);
-    verticesSize = vSize;
+    memcpy(data, data, vSize);
+    dataSize = vSize;
 
     memcpy(indices, newIndices, iSize );
     indicesSize = iSize;
@@ -26,7 +26,7 @@ SubMesh::SubMesh(VertexFormat newVertexFormat, void *data, int vSize, unsigned i
 
 SubMesh::~SubMesh()
 {
-
+    Destroy();
 }
 
 void SubMesh::Update()
@@ -37,10 +37,10 @@ void SubMesh::Update()
     vbo.create();
     vbo.bind();
     vbo.setUsagePattern(QOpenGLBuffer::UsagePattern::StaticDraw);
-    vbo.allocate(vertices,int(verticesSize));
+    vbo.allocate(data,int(dataSize));
 
-    delete[] vertices;
-    vertices = nullptr;
+    delete[] data;
+    data = nullptr;
 
     if(indices != nullptr)
     {
@@ -59,23 +59,27 @@ void SubMesh::Update()
 
         if(attr.enabled)
         {
-            //glfuncs->glEnableVertexAttribArray(GLuint(location));
-            //glfuncs->glVertexAttribPointer(Gluint(location), attr.ncomp, GL_FLOAT, GL_FALSE, vertexFormat.size, (void*)(att.offset));
-
+            glfuncs->glEnableVertexAttribArray(GLuint(location));
+            glfuncs->glVertexAttribPointer(GLuint(location), attr.ncomp, GL_FLOAT, GL_FALSE, vertexFormat.size, (void*)(attr.offset));
         }
     }
+
+    vao.release();
+    vbo.release();
+    if(ibo.isCreated())
+        ibo.release();
 }
 
 void SubMesh::Draw()
 {
-    int numVertices = verticesSize/vertexFormat.size;
     vao.bind();
     if(indicesSize > 0)
     {
-
+        glfuncs->glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, nullptr);
     }
     else {
-
+        int numVertices = dataSize/vertexFormat.size;
+        glfuncs->glDrawArrays(GL_TRIANGLES, 0, numVertices);
     }
     vao.release();
 }
