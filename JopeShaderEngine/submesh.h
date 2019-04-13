@@ -17,7 +17,9 @@ public:
     ~SubMesh();
 
     void Update();
+    void Bind();
     void Draw();
+    void UnBind();
     void Destroy();
 
 public:

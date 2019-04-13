@@ -1,25 +1,28 @@
 #include "submesh.h"
 
-SubMesh::SubMesh(VertexFormat newVertexFormat, void *data, int vSize)
+SubMesh::SubMesh(VertexFormat newVertexFormat, void *newData, int vSize)
 {
     glfuncs = QOpenGLContext::currentContext()->functions();
 
     vertexFormat = newVertexFormat;
 
-    memcpy(data, data, vSize);
+    data = new unsigned char[vSize];
+    memcpy(data, newData, vSize);
     dataSize = vSize;
 
 }
 
-SubMesh::SubMesh(VertexFormat newVertexFormat, void *data, int vSize, unsigned int *newIndices, int iSize)
+SubMesh::SubMesh(VertexFormat newVertexFormat, void *newData, int vSize, unsigned int *newIndices, int iSize)
 {
     glfuncs = QOpenGLContext::currentContext()->functions();
 
     vertexFormat = newVertexFormat;
 
-    memcpy(data, data, vSize);
+    data = new unsigned char[vSize];
+    memcpy(data, newData, vSize);
     dataSize = vSize;
 
+    indices = new unsigned int[iSize];
     memcpy(indices, newIndices, iSize );
     indicesSize = iSize;
 }
@@ -70,9 +73,20 @@ void SubMesh::Update()
         ibo.release();
 }
 
-void SubMesh::Draw()
+void SubMesh::Bind()
 {
     vao.bind();
+}
+
+void SubMesh::UnBind()
+{
+    vao.release();
+}
+
+
+void SubMesh::Draw()
+{
+    //vao.bind();
     if(indicesSize > 0)
     {
         glfuncs->glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, nullptr);
@@ -81,7 +95,7 @@ void SubMesh::Draw()
         int numVertices = dataSize/vertexFormat.size;
         glfuncs->glDrawArrays(GL_TRIANGLES, 0, numVertices);
     }
-    vao.release();
+    //vao.release();
 }
 
 void SubMesh::Destroy()

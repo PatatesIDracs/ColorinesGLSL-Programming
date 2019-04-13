@@ -4,7 +4,7 @@
 #include "component.h"
 
 class ResourceMesh;
-class Transform;
+class CompTransform;
 class MeshRendererUI;
 
 class CompMeshRenderer : public Component
@@ -15,6 +15,11 @@ public:
 
     void SetInspectorLayout(QVBoxLayout* inspectorLayout);
     void HideInspectorLayout(QVBoxLayout* inspector_layout);
+
+    int GetMeshID();
+
+public:
+    CompTransform* transform;
 
     ResourceMesh* mesh;
 

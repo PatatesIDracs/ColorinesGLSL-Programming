@@ -19,7 +19,11 @@ public:
     void LoadResource();
     void UnloadResource();
 
-    bool LoadModel(const char* filename);
+    bool LoadModel(QString fileName);
+
+    void Bind();
+    void Draw();
+    void UnBind();
 
 private:
     void ProcessNode(aiNode* node, const aiScene* scene);

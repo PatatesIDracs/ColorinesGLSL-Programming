@@ -1,6 +1,11 @@
 #include "openglwidget.h"
 #include <iostream>
 
+#include "component.h"
+#include "comptransform.h"
+#include "compmeshrenderer.h"
+#include "resourcemesh.h"
+
 OpenGLWidget::OpenGLWidget(QWidget* parent):
     QOpenGLWidget (parent)
 {
@@ -51,6 +56,7 @@ void OpenGLWidget::initializeGL()
 
     vao.release();
     vbo.release();
+
     program.release();
 
 }
@@ -67,12 +73,59 @@ void OpenGLWidget::paintGL()
 
     if(program.bind())
     {
+        /*ResourceMesh* rMesh = nullptr;
+
+        int previous = -1;
+        QMap<unsigned int, CompMeshRenderer*>::iterator i;
+        for(i = objects.begin(); i != objects.end(); i++)
+        {
+
+            CompMeshRenderer* compMesh = i.value();
+
+            program.setUniformValue("WorldMatrix", compMesh->transform->GetGlobalTransform());
+
+            if(i.key() != previous)
+            {
+                rMesh->UnBind();
+                previous = i.key();
+
+                rMesh = compMesh->mesh;
+                rMesh->Bind();
+            }
+
+            rMesh->Draw();
+
+            // Bind Textures
+
+
+
+        }
+
+        if(rMesh != nullptr)
+            rMesh->UnBind();*/
+
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 3);
         vao.release();
         program.release();
     }
 
+}
+
+void OpenGLWidget::AddGameObject(GameObject *obj)
+{
+    if(obj)
+    {
+        CompMeshRenderer* renderer = static_cast<CompMeshRenderer*>(obj->GetComponentByType(COMP_TYPE::COMP_MESHRENDER));
+        if(renderer)
+        {
+            int resourceId = renderer->GetMeshID();
+            if(resourceId <= 0)
+            {
+                objects.insert(static_cast<unsigned int>(resourceId),renderer);
+            }
+        }
+    }
 }
 
 void OpenGLWidget::finalizeGL()

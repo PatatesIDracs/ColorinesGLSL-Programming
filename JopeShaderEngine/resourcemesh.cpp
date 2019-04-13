@@ -29,13 +29,13 @@ void ResourceMesh::UnloadResource()
     submeshes.clear();
 }
 
-bool ResourceMesh::LoadModel(const char *fileName)
+bool ResourceMesh::LoadModel(QString fileName)
 {
     QFile f(fileName);
 
-    if(!f.open(QFile::ReadOnly))
+    if(!f.open(QIODevice::ReadOnly))
     {
-        f.close();
+        std::cout << "Not Read Only" << std::endl;
         return false;
     }
 
@@ -60,9 +60,44 @@ bool ResourceMesh::LoadModel(const char *fileName)
         return false;
     }
 
+    std::cout << "ProcessNode" << std::endl;
     ProcessNode(scene->mRootNode, scene);
 
+    std::cout << "End Porcess Node" << std::endl;
     return true;
+}
+
+void ResourceMesh::Bind()
+{
+    if(isLoaded())
+    {
+        for (int i = 0; i < submeshes.size(); i++)
+        {
+            submeshes[i]->Bind();
+        }
+    }
+}
+
+void ResourceMesh::Draw()
+{
+    if(isLoaded())
+    {
+        for(uint i = 0; i < submeshes.size(); i++)
+        {
+            submeshes[i]->Draw();
+        }
+    }
+}
+
+void ResourceMesh::UnBind()
+{
+    if(isLoaded())
+    {
+        for (int i = 0; i < submeshes.size(); i++)
+        {
+            submeshes[i]->UnBind();
+        }
+    }
 }
 
 void ResourceMesh::ProcessNode(aiNode *node, const aiScene *scene)
@@ -88,7 +123,7 @@ SubMesh *ResourceMesh::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 
     bool hasTexCoords = false;
 
-    vertices.reserve(mesh->mNumVertices);
+    vertices.reserve(mesh->mNumVertices*6);
     for(int i = 0; i < mesh->mNumVertices; i++)
     {
         vertices.push_back(mesh->mVertices[i].x);
@@ -101,10 +136,11 @@ SubMesh *ResourceMesh::ProcessMesh(aiMesh *mesh, const aiScene *scene)
         if(mesh->mTextureCoords[0])
         {
             hasTexCoords = true;
-            vertices.push_back(mesh->mTextureCoords[i]->x);
-            vertices.push_back(mesh->mTextureCoords[i]->y);
+            vertices.push_back(mesh->mTextureCoords[0][i].x);
+            vertices.push_back(mesh->mTextureCoords[0][i].y);
         }
     }
+
 
     indices.reserve(mesh->mNumFaces*3);
     for(int i = 0; i < mesh->mNumFaces; i++)

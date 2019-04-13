@@ -1,6 +1,9 @@
 #include "compmeshrenderer.h"
 #include "meshrendererui.h"
 
+#include "resource.h"
+#include "resourcemesh.h"
+
 #include <QVBoxLayout>
 
 
@@ -24,4 +27,13 @@ void CompMeshRenderer::HideInspectorLayout(QVBoxLayout *inspector_layout)
 {
     inspector_layout->removeWidget(meshRendererUI);
     meshRendererUI->hide();
+}
+
+int CompMeshRenderer::GetMeshID()
+{
+    if(mesh)
+    {
+        return mesh->Id();
+    }
+    else return -1;
 }

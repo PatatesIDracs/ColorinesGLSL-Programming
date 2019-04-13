@@ -8,6 +8,12 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLShaderProgram>
 
+#include <QMap>
+
+#include "gameobject.h"
+
+class CompMeshRenderer;
+
 class OpenGLWidget :
         public QOpenGLWidget,
         protected QOpenGLFunctions_3_3_Core
@@ -27,6 +33,7 @@ signals:
 
 public slots:
 
+    void AddGameObject(GameObject* obj);
     void finalizeGL();
 
 private:
@@ -34,6 +41,8 @@ private:
     QOpenGLBuffer vbo;
     QOpenGLVertexArrayObject vao;
     QOpenGLShaderProgram program;
+
+    QMap<unsigned int, CompMeshRenderer*> objects;
 
 };
 

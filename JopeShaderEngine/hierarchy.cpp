@@ -1,10 +1,16 @@
 #include "hierarchy.h"
 #include "ui_hierarchy.h"
 #include "gameobject.h"
+
+
+
+#include "comptransform.h"
+#include "compmeshrenderer.h"
 #include "resourcemesh.h"
 
 #include <QFileDialog>
 #include <QDir>
+#include <QMessageBox>
 
 #include <iostream>
 
@@ -26,6 +32,9 @@ Hierarchy::~Hierarchy()
 {
     qDeleteAll(objects.begin(), objects.end());
     objects.clear();
+
+    qDeleteAll(resources.begin(), resources.end());
+    resources.clear();
 
     delete ui;
 }
@@ -51,6 +60,8 @@ void Hierarchy::CreateNewGO()
     ui->listWidget->scrollToBottom();
     ui->listWidget->currentRowChanged(numObj);
     ui->listWidget->setCurrentRow(numObj);
+
+    SigHierarchyUpdate(selected);
 }
 
 void Hierarchy::RemoveGO()
@@ -67,6 +78,8 @@ void Hierarchy::RemoveGO()
             break;
         }
     }
+
+    SigHierarchyUpdate(selected);
 }
 
 void Hierarchy::OnItemClicked()
@@ -202,12 +215,26 @@ void Hierarchy::OpenFile()
         std::cout << "File NULL" << std::endl;
     }
 
-
     resourceCount++;
     ResourceMesh* mesh = new ResourceMesh(resourceCount);
-/*
-    mesh->LoadModel((const char*)file_name.data());*/
-    resources.push_back(mesh);
 
+    if(mesh->LoadModel(file_name))
+    {
+        std::cout << "Model Loaded" << std::endl;
+        QMessageBox::StandardButton button = QMessageBox::question(
+                    this, "Open File Output",
+                    "Resource Mesh loaded, do you want to create a GameObject with this resource?");
+        if(button == QMessageBox::Yes)
+        {
+            CreateNewGO();
+            CompMeshRenderer* renderer = static_cast<CompMeshRenderer*>(selected->GetComponentByType(COMP_TYPE::COMP_MESHRENDER));
 
+            renderer->mesh = mesh;
+            mesh->AddInstance();
+
+            emit SigResourceUpdate(selected);
+        }
+        resources.push_back(mesh);
+
+    }
 }

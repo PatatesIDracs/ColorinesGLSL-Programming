@@ -14,7 +14,10 @@ Resource::~Resource()
 void Resource::AddInstance()
 {
     if(!loaded)
+    {
         LoadResource();
+        loaded = true;
+    }
 
     count++;
 }
