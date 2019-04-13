@@ -8,6 +8,7 @@ CompTransform::CompTransform(GameObject* parent) : Component(parent, COMP_TRANSF
     transformLocal.setToIdentity();
     transformGlobal.setToIdentity();
     transformUI = new TransformUI();
+    transformUI->SetCompTransform(this);
 }
 
 CompTransform::~CompTransform()

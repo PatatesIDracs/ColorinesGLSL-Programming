@@ -2,6 +2,7 @@
 #define TRANSFORMUI_H
 
 #include <QWidget>
+class CompTransform;
 
 namespace Ui {
 class TransformUI;
@@ -15,9 +16,17 @@ public:
     explicit TransformUI(QWidget *parent = nullptr);
     ~TransformUI();
 
+    void SetCompTransform(CompTransform* newCompTransform);
+
+
+public slots:
+    void ChangePosition();
+    void ChangeRotation();
+    void ChangeScale();
+
 private:
     Ui::TransformUI *ui;
-
+    CompTransform* compTransform;
 
 signals:
     void SigTransformUpdate();
