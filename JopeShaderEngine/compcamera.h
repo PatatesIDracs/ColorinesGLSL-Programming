@@ -32,6 +32,8 @@ public:
 
     void prepareMatrices();
 
+    void SetAspectRatio(int width, int height);
+
 private:
 
     int viewportWidth = 256;

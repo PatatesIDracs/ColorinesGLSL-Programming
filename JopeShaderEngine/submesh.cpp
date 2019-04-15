@@ -93,17 +93,10 @@ void SubMesh::Draw()
     vao.bind();
     if(indicesSize > 0)
     {
-        std::cout << "Indices = " << indicesSize << "Vertices = " << numVertices << std::endl;
         glfuncs->glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, nullptr);
-
-        std::cout << "Indices drawn" << std::endl;
     }
     else {
-        std::cout << "Vertices > 0" << std::endl;
-
         glfuncs->glDrawArrays(GL_TRIANGLES, 0, numVertices);
-
-        std::cout << "vertices drawn" << std::endl;
     }
     vao.release();
 }

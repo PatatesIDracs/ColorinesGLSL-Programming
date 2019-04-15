@@ -1,5 +1,7 @@
 #include "compcamera.h"
 
+#include <iostream>
+
 CompCamera::CompCamera(GameObject* parent) : Component(parent, COMP_CAMERA)
 {
     position = QVector3D(0,0,-10);
@@ -41,4 +43,12 @@ void CompCamera::prepareMatrices()
     viewMatrix.lookAt(position, QVector3D(0,0,0),QVector3D(0,1,0));
     worldMatrix = viewMatrix.inverted();
     projectionMatrix.perspective(fovy,aspectRatio,zNear,zFar);
+}
+
+void CompCamera::SetAspectRatio(int width, int height)
+{
+    aspectRatio = float(width)/float(height);
+    std::cout << aspectRatio << std::endl;
+    projectionMatrix.setToIdentity();
+    projectionMatrix.perspective(fovy, aspectRatio, zNear, zFar);
 }

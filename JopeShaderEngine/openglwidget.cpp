@@ -15,9 +15,9 @@ OpenGLWidget::OpenGLWidget(QWidget* parent):
     QOpenGLWidget (parent)
 {
 
+    camera = new CompCamera(nullptr);
     setMinimumSize(parent->window()->size());
 
-    camera = new CompCamera(nullptr);
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -64,7 +64,7 @@ void OpenGLWidget::initializeGL()
 
     vao.release();
     vbo.release();*/
-    DrawTestSphere();
+    //DrawTestSphere();
     program.release();
 
 }
@@ -141,7 +141,11 @@ void OpenGLWidget::DrawTestSphere()
 
 void OpenGLWidget::resizeGL(int w, int h)
 {
+    std::cout << "Aspect ratio" << w << h << std::endl;
+
     resize(w,h);
+    camera->SetAspectRatio(w,h);
+
 }
 
 void OpenGLWidget::paintGL()
@@ -152,7 +156,6 @@ void OpenGLWidget::paintGL()
     glEnable(GL_CULL_FACE);
     if(program.bind())
     {
-
         program.setUniformValue("projectionMatrix", camera->GetProjectionMatrix());
         QMatrix4x4 cameraTransfrom = camera->GetViewMatrix();
 
