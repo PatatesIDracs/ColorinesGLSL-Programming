@@ -7,13 +7,24 @@
 #include "compmeshrenderer.h"
 
 
-GameObject::GameObject(int i)
+GameObject::GameObject(int i, GameObject* parent) :parent(parent)
 {
     name = "New GameObject ";
     name.append(QString::number(i));
 
+    if(parent != nullptr)
+        parent->childs.push_back(this);
+
     components.push_back(new CompTransform(this));
     components.push_back(new CompMeshRenderer(this));
+}
+
+GameObject::~GameObject()
+{
+    if(parent!= nullptr)
+        parent->childs.removeOne(this);
+    qDeleteAll(childs.begin(), childs.end());
+    childs.clear();
 }
 
 void GameObject::Save(QDataStream &outstream)
@@ -40,6 +51,11 @@ void GameObject::HideInspectorLayout(QVBoxLayout *inspector_layout)
     {
         components[i]->HideInspectorLayout(inspector_layout);
     }
+}
+
+CompTransform *GameObject::GetTransform()
+{
+    return (CompTransform*)GetComponentByType(COMP_TRANSFORM);
 }
 
 Component *GameObject::GetComponentByType(COMP_TYPE comp_type)

@@ -29,13 +29,18 @@ void CompTransform::HideInspectorLayout(QVBoxLayout *inspector_layout)
     transformUI->hide();
 }
 
-const QMatrix4x4 CompTransform::GetLocalTransform() const
+QMatrix4x4 CompTransform::GetLocalTransform() const
 {
     return transformLocal;
 }
 
-const QMatrix4x4 CompTransform::GetGlobalTransform() const
+QMatrix4x4 CompTransform::GetGlobalTransform()
 {
+    if(parent->parent != nullptr)
+        transformGlobal = parent->parent->GetTransform()->GetGlobalTransform() * transformLocal;
+    else
+        transformGlobal = transformLocal;
+
     return transformGlobal;
 }
 
@@ -106,5 +111,7 @@ void CompTransform::ReCalculateTransform()
     transformLocal.translate(position);
     transformLocal.rotate(rotation);
     transformLocal.scale(scale);
+    std::cout << "Recalculation transform" << std::endl;
+    std::cout << "trueposX" << transformLocal.column(3).x() << "posY" << transformLocal.column(3).y() << "posZ" << transformLocal.column(3).z() << std::endl;
 }
 

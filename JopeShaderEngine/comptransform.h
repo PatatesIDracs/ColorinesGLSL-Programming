@@ -19,8 +19,8 @@ public:
     void HideInspectorLayout(QVBoxLayout* inspector_layout);
 
     //Getters
-    const QMatrix4x4 GetLocalTransform() const;
-    const QMatrix4x4 GetGlobalTransform() const;
+    QMatrix4x4 GetLocalTransform() const;
+    QMatrix4x4 GetGlobalTransform();
     const QQuaternion GetRotQuat() const;
     const QVector3D GetRotAngles() const;
     const QVector3D GetPosition() const;

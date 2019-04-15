@@ -169,7 +169,7 @@ void OpenGLWidget::paintGL()
 
             CompMeshRenderer* compMesh = i.value();
 
-            program.setUniformValue("worldViewMatrix", cameraTransfrom);
+            program.setUniformValue("worldViewMatrix", cameraTransfrom * compMesh->parent->GetTransform()->GetGlobalTransform());
             rMesh = compMesh->mesh;
             /*if(i.key() != previous)
             {
