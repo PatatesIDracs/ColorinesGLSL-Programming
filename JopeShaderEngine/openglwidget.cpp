@@ -8,6 +8,9 @@
 
 #include <QMatrix4x4>
 
+#define sphereH 32
+#define sphereV 16
+
 OpenGLWidget::OpenGLWidget(QWidget* parent):
     QOpenGLWidget (parent)
 {
@@ -38,7 +41,7 @@ void OpenGLWidget::initializeGL()
     program.bind();
 
     //VBO
-    QVector3D vertices[] = {
+/*    QVector3D vertices[] = {
         QVector3D(-0.5f,-0.5f,0.0f),  QVector3D(1.0f,0.0f,0.0f),
         QVector3D(0.5f,-0.5f,0.0f),QVector3D(0.0f,1.0f,.0f),
         QVector3D(0.0f,0.5f,0.0f),QVector3D(0.0f,0.5f,1.0f)
@@ -60,9 +63,79 @@ void OpenGLWidget::initializeGL()
     glVertexAttribPointer(1,compCount,GL_FLOAT, GL_FALSE, strideBytes, (void*)(offsetBytes1));
 
     vao.release();
-    vbo.release();
-
+    vbo.release();*/
+    DrawTestSphere();
     program.release();
+
+}
+
+void OpenGLWidget::DrawTestSphere()
+{
+    static const float pi = 3.1416f;
+    struct Vertex { QVector3D pos; QVector3D norm; };
+
+    Vertex sphere[sphereH][sphereV + 1];
+    for (int h = 0; h < sphereH; ++h)
+    {
+        for (int v = 0; v < sphereV + 1; ++v)
+        {
+            float nh = float(h)/ sphereH;
+            float nv = float(v)/ sphereV - 0.5f;
+            float angleh = 2 * pi * nh;
+            float anglev = - pi * nv;
+            sphere[h][v].pos.setX(sinf(angleh)*cosf(anglev));
+            sphere[h][v].pos.setY(-sinf(anglev));
+            sphere[h][v].pos.setZ(cosf(angleh) * cosf(anglev));
+            sphere[h][v].norm = sphere[h][v].pos;
+        }
+    }
+
+    unsigned int sphereIndices[sphereH][sphereV][6];
+    for (unsigned int h = 0; h < sphereH; ++h)
+    {
+        for(unsigned int v = 0; v < sphereV; ++v)
+        {
+            sphereIndices[h][v][0] = (h+0) * (sphereV+1) + v;
+            sphereIndices[h][v][1] = ((h+1)%sphereH) * (sphereV+1) + v;
+            sphereIndices[h][v][2] = ((h+1)%sphereH) * (sphereV+1) + v + 1;
+            sphereIndices[h][v][3] = (h+0) * (sphereV+1) + v;
+            sphereIndices[h][v][4] = ((h+1)%sphereH) * (sphereV+1) + v + 1;
+            sphereIndices[h][v][5] = (h+0) * (sphereV+1) + v + 1;
+        }
+    }
+
+    ibo = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+
+    vao.create();
+    vao.bind();
+
+    vbo.create();
+    vbo.bind();
+    vbo.setUsagePattern((QOpenGLBuffer::UsagePattern::StaticDraw));
+    std::cout << "1" << std::endl;
+    std::cout << "sphere size 1= " << sizeof (sphere) << std::endl;
+    vbo.allocate(sphere[0], sizeof(sphere));
+
+
+    ibo.create();
+    ibo.bind();
+    ibo.setUsagePattern(QOpenGLBuffer::UsagePattern::StaticDraw);
+    ibo.allocate(sphereIndices[0], int((sphereH*sphereV*6)*sizeof(unsigned int)));
+     std::cout << "2" << std::endl;
+
+    const GLint compCount = 3;
+    const int strideBytes = 2*sizeof (QVector3D);
+    const int offsetBytes0 = 0;
+    const int offsetBytes1 = sizeof (QVector3D);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(0,compCount,GL_FLOAT, GL_FALSE, strideBytes, (void*)(offsetBytes0));
+    glVertexAttribPointer(1,compCount,GL_FLOAT, GL_FALSE, strideBytes, (void*)(offsetBytes1));
+    std::cout << "3" << std::endl;
+    vao.release();
+    vbo.release();
+    ibo.release();
+     std::cout << "4" << std::endl;
 
 }
 
@@ -124,11 +197,17 @@ void OpenGLWidget::paintGL()
         if(rMesh != nullptr)
             rMesh->UnBind();
 
-        /*vao.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        vao.release();*/
-        program.release();
-        std::cout << "DrawArray" << std::endl;
+       //vao.bind();
+       //std::cout << "Going to draw sphere" << std::endl;
+       //glDrawElements(GL_TRIANGLES, (sphereH*sphereV*6), GL_UNSIGNED_INT, nullptr);
+       //std::cout << "Not crashed" << std::endl;
+       //vao.release();
+
+       //vao.bind();
+       //glDrawArrays(GL_TRIANGLES, 0, 3);
+       //vao.release();
+       program.release();
+       //std::cout << "DrawArray" << std::endl;
     }
 
 }

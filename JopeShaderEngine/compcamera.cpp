@@ -2,7 +2,7 @@
 
 CompCamera::CompCamera(GameObject* parent) : Component(parent, COMP_CAMERA)
 {
-    position = QVector3D(1,1,1);
+    position = QVector3D(0,0,-10);
     prepareMatrices();
 }
 

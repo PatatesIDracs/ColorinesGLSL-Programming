@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-SubMesh::SubMesh(VertexFormat newVertexFormat, void *newData, int vSize)
+SubMesh::SubMesh(VertexFormat newVertexFormat, void *newData, int vSize):ibo(QOpenGLBuffer::IndexBuffer)
 {
     glfuncs = QOpenGLContext::currentContext()->functions();
 
@@ -14,7 +14,7 @@ SubMesh::SubMesh(VertexFormat newVertexFormat, void *newData, int vSize)
 
 }
 
-SubMesh::SubMesh(VertexFormat newVertexFormat, void *newData, int vSize, unsigned int *newIndices, int iSize)
+SubMesh::SubMesh(VertexFormat newVertexFormat, void *newData, int vSize, unsigned int *newIndices, int iSize) : ibo(QOpenGLBuffer::IndexBuffer)
 {
     glfuncs = QOpenGLContext::currentContext()->functions();
 
@@ -25,7 +25,7 @@ SubMesh::SubMesh(VertexFormat newVertexFormat, void *newData, int vSize, unsigne
     dataSize = vSize;
 
     indices = new unsigned int[iSize];
-    memcpy(indices, newIndices, iSize );
+    memcpy(indices, newIndices, iSize * sizeof (unsigned int));
     indicesSize = iSize;
 }
 

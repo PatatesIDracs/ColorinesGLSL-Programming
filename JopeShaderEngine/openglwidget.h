@@ -30,6 +30,8 @@ public:
     void resizeGL(int w, int h) override;
     void paintGL() override;
 
+    void DrawTestSphere();
+
 signals:
 
 public slots:
@@ -39,6 +41,7 @@ public slots:
 
 private:
 
+    QOpenGLBuffer ibo;
     QOpenGLBuffer vbo;
     QOpenGLVertexArrayObject vao;
     QOpenGLShaderProgram program;
