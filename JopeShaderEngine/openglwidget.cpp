@@ -6,12 +6,15 @@
 #include "compmeshrenderer.h"
 #include "resourcemesh.h"
 
+#include <QMatrix4x4>
+
 OpenGLWidget::OpenGLWidget(QWidget* parent):
     QOpenGLWidget (parent)
 {
 
     setMinimumSize(parent->window()->size());
 
+    camera = new CompCamera(nullptr);
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -27,8 +30,10 @@ void OpenGLWidget::initializeGL()
     connect(context(), SIGNAL(aboutToBeDestroyed()), this, SLOT(finalizeGL()));
 
     program.create();
-    program.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader1_vert.vert");
-    program.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader1_frag.frag");
+    //program.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader1_vert.vert");
+    //program.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader1_frag.frag");
+    program.addShaderFromSourceFile(QOpenGLShader::Vertex, "vertex_shader.vert");
+    program.addShaderFromSourceFile(QOpenGLShader::Fragment, "fragment_shader.frag");
     program.link();
     program.bind();
 
@@ -68,12 +73,18 @@ void OpenGLWidget::resizeGL(int w, int h)
 
 void OpenGLWidget::paintGL()
 {
-    glClearColor(0.0f,0.0f,0.0f,1.0f);
+    glClearColor(0.5f,0.5f,0.5f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    glEnable(GL_CULL_FACE);
     if(program.bind())
     {
-        /*ResourceMesh* rMesh = nullptr;
+
+        program.setUniformValue("projectionMatrix", camera->GetProjectionMatrix());
+        QMatrix4x4 cameraTransfrom = camera->GetViewMatrix();
+
+
+        ResourceMesh* rMesh = nullptr;
 
         int previous = -1;
         QMap<unsigned int, CompMeshRenderer*>::iterator i;
@@ -82,19 +93,28 @@ void OpenGLWidget::paintGL()
 
             CompMeshRenderer* compMesh = i.value();
 
-            program.setUniformValue("WorldMatrix", compMesh->transform->GetGlobalTransform());
-
-            if(i.key() != previous)
+            program.setUniformValue("worldViewMatrix", cameraTransfrom);
+            rMesh = compMesh->mesh;
+            /*if(i.key() != previous)
             {
-                rMesh->UnBind();
+                if(rMesh)
+                    rMesh->UnBind();
                 previous = i.key();
 
                 rMesh = compMesh->mesh;
-                rMesh->Bind();
+                if(rMesh)
+                {
+                    rMesh->Bind();
+                }
+
+            }*/
+
+            if(rMesh)
+            {
+                std::cout << "Draw Mesh" << std::endl;
+                rMesh->Draw();
             }
-
-            rMesh->Draw();
-
+            std::cout << "Mesh drawn" << std::endl;
             // Bind Textures
 
 
@@ -102,20 +122,23 @@ void OpenGLWidget::paintGL()
         }
 
         if(rMesh != nullptr)
-            rMesh->UnBind();*/
+            rMesh->UnBind();
 
-        vao.bind();
+        /*vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        vao.release();
+        vao.release();*/
         program.release();
+        std::cout << "DrawArray" << std::endl;
     }
 
 }
 
 void OpenGLWidget::AddGameObject(GameObject *obj)
 {
+    std::cout << "Add GameObject" << std::endl;
     if(obj)
     {
+        std::cout << "GameObject not null" << std::endl;
         CompMeshRenderer* renderer = static_cast<CompMeshRenderer*>(obj->GetComponentByType(COMP_TYPE::COMP_MESHRENDER));
         if(renderer)
         {
@@ -123,6 +146,7 @@ void OpenGLWidget::AddGameObject(GameObject *obj)
             if(resourceId <= 0)
             {
                 objects.insert(static_cast<unsigned int>(resourceId),renderer);
+                std::cout << "insert GO" << std::endl;
             }
         }
     }
@@ -130,8 +154,8 @@ void OpenGLWidget::AddGameObject(GameObject *obj)
 
 void OpenGLWidget::finalizeGL()
 {
-    vao.release();
-    vbo.release();
+    //vao.release();
+    //vbo.release();
     program.release();
 }
 

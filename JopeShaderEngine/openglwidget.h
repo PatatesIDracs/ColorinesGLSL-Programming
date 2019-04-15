@@ -11,6 +11,7 @@
 #include <QMap>
 
 #include "gameobject.h"
+#include "compcamera.h"
 
 class CompMeshRenderer;
 
@@ -43,6 +44,8 @@ private:
     QOpenGLShaderProgram program;
 
     QMap<unsigned int, CompMeshRenderer*> objects;
+
+    CompCamera* camera = nullptr;
 
 };
 

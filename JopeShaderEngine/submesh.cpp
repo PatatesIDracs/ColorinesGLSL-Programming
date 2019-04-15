@@ -1,5 +1,7 @@
 #include "submesh.h"
 
+#include <iostream>
+
 SubMesh::SubMesh(VertexFormat newVertexFormat, void *newData, int vSize)
 {
     glfuncs = QOpenGLContext::currentContext()->functions();
@@ -50,7 +52,7 @@ void SubMesh::Update()
         ibo.create();
         ibo.bind();
         ibo.setUsagePattern(QOpenGLBuffer::UsagePattern::StaticDraw);
-        ibo.allocate(indices, int(indicesSize));
+        ibo.allocate(indices, int(indicesSize*sizeof(unsigned int)));
 
         delete[] indices;
         indices = nullptr;
@@ -86,16 +88,24 @@ void SubMesh::UnBind()
 
 void SubMesh::Draw()
 {
-    //vao.bind();
+    int numVertices = dataSize/vertexFormat.size;
+
+    vao.bind();
     if(indicesSize > 0)
     {
+        std::cout << "Indices = " << indicesSize << "Vertices = " << numVertices << std::endl;
         glfuncs->glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, nullptr);
+
+        std::cout << "Indices drawn" << std::endl;
     }
     else {
-        int numVertices = dataSize/vertexFormat.size;
+        std::cout << "Vertices > 0" << std::endl;
+
         glfuncs->glDrawArrays(GL_TRIANGLES, 0, numVertices);
+
+        std::cout << "vertices drawn" << std::endl;
     }
-    //vao.release();
+    vao.release();
 }
 
 void SubMesh::Destroy()

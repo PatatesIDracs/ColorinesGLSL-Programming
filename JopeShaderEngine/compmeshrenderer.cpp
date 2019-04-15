@@ -5,11 +5,12 @@
 #include "resourcemesh.h"
 
 #include <QVBoxLayout>
-
+#include "comptransform.h"
 
 CompMeshRenderer::CompMeshRenderer(GameObject* parent) : Component (parent, COMP_MESHRENDER)
 {
     meshRendererUI = new MeshRendererUI();
+    transform = static_cast<CompTransform*>(parent->GetComponentByType(COMP_TYPE::COMP_TRANSFORM));
 }
 
 CompMeshRenderer::~CompMeshRenderer()

@@ -71,7 +71,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     shader1_vert.vert \
-    shader1_frag.frag
+    shader1_frag.frag \
+    vertex_shader.vert \
+    fragment_shader.frag
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimpd
