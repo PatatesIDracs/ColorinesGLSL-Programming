@@ -18,6 +18,13 @@ OpenGLWidget::OpenGLWidget(QWidget* parent):
     camera = new CompCamera(nullptr);
     setMinimumSize(parent->window()->size());
 
+    connect(&timer, SIGNAL(timeout()),this,SLOT(UpdateScene()));
+
+   if(format().swapInterval() == -1)
+       timer.setInterval(16);
+   else
+       timer.setInterval(0);
+   timer.start();
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -139,6 +146,11 @@ void OpenGLWidget::DrawTestSphere()
 
 }
 
+void OpenGLWidget::UpdateScene()
+{
+    update();
+}
+
 void OpenGLWidget::resizeGL(int w, int h)
 {
     std::cout << "Aspect ratio" << w << h << std::endl;
@@ -153,6 +165,7 @@ void OpenGLWidget::paintGL()
     glClearColor(0.5f,0.5f,0.5f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     if(program.bind())
     {
@@ -187,10 +200,8 @@ void OpenGLWidget::paintGL()
 
             if(rMesh)
             {
-                std::cout << "Draw Mesh" << std::endl;
                 rMesh->Draw();
             }
-            std::cout << "Mesh drawn" << std::endl;
             // Bind Textures
 
 

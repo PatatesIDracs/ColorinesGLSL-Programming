@@ -111,7 +111,5 @@ void CompTransform::ReCalculateTransform()
     transformLocal.translate(position);
     transformLocal.rotate(rotation);
     transformLocal.scale(scale);
-    std::cout << "Recalculation transform" << std::endl;
-    std::cout << "trueposX" << transformLocal.column(3).x() << "posY" << transformLocal.column(3).y() << "posZ" << transformLocal.column(3).z() << std::endl;
 }
 

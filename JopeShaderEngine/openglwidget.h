@@ -9,6 +9,7 @@
 #include <QOpenGLShaderProgram>
 
 #include <QMap>
+#include <QTimer>
 
 #include "gameobject.h"
 #include "compcamera.h"
@@ -35,7 +36,7 @@ public:
 signals:
 
 public slots:
-
+    void UpdateScene();
     void AddGameObject(GameObject* obj);
     void finalizeGL();
 
@@ -49,6 +50,8 @@ private:
     QMap<unsigned int, CompMeshRenderer*> objects;
 
     CompCamera* camera = nullptr;
+
+    QTimer timer;
 
 };
 
