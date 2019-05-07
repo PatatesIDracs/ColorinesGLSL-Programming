@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     hierarchy = new Hierarchy();
     ui->dock_hierarchy->setWidget(hierarchy);
+    hierarchy->openGLWidget = ui->openGLWidget;
 
     inspector = new Inspector();
     ui->dock_inspector->setWidget(inspector);

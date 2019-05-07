@@ -11,6 +11,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QMessageBox>
+#include <QOpenGLWidget>
 
 #include <iostream>
 
@@ -217,6 +218,7 @@ void Hierarchy::OpenFile()
 
     resourceCount++;
     ResourceMesh* mesh = new ResourceMesh(resourceCount);
+    mesh->test = openGLWidget;
 
     if(mesh->LoadModel(file_name))
     {

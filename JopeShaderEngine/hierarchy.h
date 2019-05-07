@@ -12,6 +12,7 @@ class Hierarchy;
 class Inspector;
 class GameObject;
 class Resource;
+class QOpenGLWidget;
 
 class Hierarchy : public QWidget
 {
@@ -42,6 +43,7 @@ public slots:
 
 public:
     Inspector* inspector;
+    QOpenGLWidget* openGLWidget;
 private:
     Ui::Hierarchy *ui;
 

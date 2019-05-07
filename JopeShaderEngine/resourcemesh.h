@@ -4,6 +4,7 @@
 #include "resource.h"
 #include "submesh.h"
 
+#include <QOpenGLWidget>
 #include <QVector>
 
 struct aiNode;
@@ -30,7 +31,7 @@ private:
     SubMesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
 public:
-
+    QOpenGLWidget* openGlWidget;
     QVector<SubMesh*> submeshes;
 };
 

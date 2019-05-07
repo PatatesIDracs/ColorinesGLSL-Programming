@@ -6,6 +6,7 @@
 #include <assimp/postprocess.h>
 
 #include <QFileDialog>
+#include <QOpenGLWidget>
 
 ResourceMesh::ResourceMesh(unsigned int id) : Resource(RESOURCE_TYPE::RESOURCE_MESH, id)
 {
@@ -14,6 +15,7 @@ ResourceMesh::ResourceMesh(unsigned int id) : Resource(RESOURCE_TYPE::RESOURCE_M
 
 void ResourceMesh::LoadResource()
 {
+    openGlWidget->makeCurrent();
     for(int i = 0; i < submeshes.size(); i++)
     {
          submeshes[i]->Update();
