@@ -8,6 +8,8 @@ enum RESOURCE_TYPE
     RESOURCE_TEXTURE
 };
 
+#include <QString>
+
 class Resource
 {
 public:
@@ -15,6 +17,9 @@ public:
     virtual ~Resource();
 
     unsigned int Id(){ return id; }
+
+    void SetName(QString newName) { name = newName; }
+    QString GetName(){ return name; }
 
     virtual void LoadResource(){}
     virtual void UnloadResource(){}
@@ -27,6 +32,7 @@ public:
 
 private:
     RESOURCE_TYPE type;
+    QString name;
 
     unsigned int id = 0;
 

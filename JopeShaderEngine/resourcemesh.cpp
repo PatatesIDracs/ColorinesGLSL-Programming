@@ -62,10 +62,15 @@ bool ResourceMesh::LoadModel(QString fileName)
         return false;
     }
 
+     SetName(fileName.section('/', -1));
+
     std::cout << "ProcessNode" << std::endl;
     ProcessNode(scene->mRootNode, scene);
 
     std::cout << "End Porcess Node" << std::endl;
+
+    f.close();
+
     return true;
 }
 
