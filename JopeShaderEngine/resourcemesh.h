@@ -4,12 +4,14 @@
 #include "resource.h"
 #include "submesh.h"
 
-#include <QOpenGLWidget>
+
 #include <QVector>
 
 struct aiNode;
 struct aiScene;
 struct aiMesh;
+
+class QOpenGLWidget;
 
 class ResourceMesh : public Resource
 {

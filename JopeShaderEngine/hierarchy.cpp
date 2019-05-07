@@ -218,7 +218,7 @@ void Hierarchy::OpenFile()
 
     resourceCount++;
     ResourceMesh* mesh = new ResourceMesh(resourceCount);
-    mesh->test = openGLWidget;
+    mesh->openGlWidget = openGLWidget;
 
     if(mesh->LoadModel(file_name))
     {
