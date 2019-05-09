@@ -129,8 +129,16 @@ SubMesh *ResourceMesh::ProcessMesh(aiMesh *mesh, const aiScene *scene)
     QVector<unsigned int> indices;
 
     bool hasTexCoords = false;
+    bool hasTangBitang = false;
 
-    vertices.reserve(mesh->mNumVertices*6);
+    int size = 0;
+    if (mesh->HasTangentsAndBitangents()){
+        hasTangBitang = true;
+        size = mesh->mNumVertices*12;
+    }
+    else size = mesh->mNumVertices*6;
+    vertices.reserve(size);
+
     for(int i = 0; i < mesh->mNumVertices; i++)
     {
         vertices.push_back(mesh->mVertices[i].x);
@@ -145,6 +153,16 @@ SubMesh *ResourceMesh::ProcessMesh(aiMesh *mesh, const aiScene *scene)
             hasTexCoords = true;
             vertices.push_back(mesh->mTextureCoords[0][i].x);
             vertices.push_back(mesh->mTextureCoords[0][i].y);
+        }
+
+        if(hasTangBitang)
+        {
+            vertices.push_back(mesh->mTangents[i].x);
+            vertices.push_back(mesh->mTangents[i].y);
+            vertices.push_back(mesh->mTangents[i].z);
+            vertices.push_back(mesh->mBitangents[i].x);
+            vertices.push_back(mesh->mBitangents[i].y);
+            vertices.push_back(mesh->mBitangents[i].z);
         }
     }
 
@@ -164,6 +182,11 @@ SubMesh *ResourceMesh::ProcessMesh(aiMesh *mesh, const aiScene *scene)
     vertexFormat.SetVertexAttribute(1,3*sizeof(float), 3);
     if(hasTexCoords)
         vertexFormat.SetVertexAttribute(2,6*sizeof(float), 2);
+    if(hasTangBitang)
+    {
+        vertexFormat.SetVertexAttribute(3,9*sizeof(float),3);
+        vertexFormat.SetVertexAttribute(4,12*sizeof(float), 3);
+    }
 
     return new SubMesh(vertexFormat, &vertices[0], vertices.size()*sizeof(float), &indices[0], indices.size());
 }
