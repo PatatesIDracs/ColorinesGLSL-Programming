@@ -46,6 +46,7 @@ void Inspector::SetSelectedGO(GameObject *selected)
     current_go = selected;
     name->setText(current_go->name);
     layout->removeItem(spacer);
+    current_go->UpdateComponents();
     current_go->SetInspectorLayout(layout);
 
     layout->addItem(spacer);

@@ -18,7 +18,7 @@
 
 Hierarchy::Hierarchy(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Hierarchy), count(0)
+    ui(new Ui::Hierarchy), count(0), resourceCount(0)
 {
     ui->setupUi(this);
 
@@ -34,8 +34,10 @@ Hierarchy::~Hierarchy()
     qDeleteAll(objects.begin(), objects.end());
     objects.clear();
 
-    qDeleteAll(resources.begin(), resources.end());
-    resources.clear();
+    //qDeleteAll(resources.begin(), resources.end());
+    //resources.clear();
+
+    qDeleteAll(meshResources.begin(), meshResources.end());
 
     delete ui;
 }
@@ -54,7 +56,7 @@ void Hierarchy::CreateNewGO()
     count++;
     int numObj = objects.size();
 
-    selected = new GameObject(count);
+    selected = new GameObject(count, &meshResources);
     objects.push_back(selected);
 
     ui->listWidget->addItem(selected->name);
@@ -63,6 +65,7 @@ void Hierarchy::CreateNewGO()
     ui->listWidget->setCurrentRow(numObj);
 
     SigHierarchyUpdate(selected);
+    emit SigResourceUpdate(selected);
 }
 
 void Hierarchy::RemoveGO()
@@ -158,7 +161,7 @@ void Hierarchy::OpenScene()
         uint i = 0;
         for(; i < numObj; i++)
         {
-            GameObject* temp = new GameObject(i);
+            GameObject* temp = new GameObject(i, &meshResources);
 
             temp->Load(stream);
 
@@ -234,9 +237,8 @@ void Hierarchy::OpenFile()
             renderer->mesh = mesh;
             mesh->AddInstance();
 
-            emit SigResourceUpdate(selected);
         }
-        resources.push_back(mesh);
+        meshResources.push_back(mesh);
 
     }
 }

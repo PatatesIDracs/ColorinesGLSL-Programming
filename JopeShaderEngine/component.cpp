@@ -12,6 +12,11 @@ Component::~Component()
 
 }
 
+void Component::UpdateComponent()
+{
+    return;
+}
+
 void Component::SetInspectorLayout(QVBoxLayout *inspectorLayout)
 {
     return;

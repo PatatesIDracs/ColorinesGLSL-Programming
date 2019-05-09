@@ -10,9 +10,10 @@ class MeshRendererUI;
 class CompMeshRenderer : public Component
 {
 public:
-    CompMeshRenderer(GameObject* parent);
+    CompMeshRenderer(GameObject* parent, QVector<ResourceMesh*>* meshResources);
     ~CompMeshRenderer();
 
+    void UpdateComponent();
     void SetInspectorLayout(QVBoxLayout* inspectorLayout);
     void HideInspectorLayout(QVBoxLayout* inspector_layout);
 
@@ -21,7 +22,7 @@ public:
 public:
     CompTransform* transform;
 
-    ResourceMesh* mesh;
+    ResourceMesh* mesh = nullptr;
 
     MeshRendererUI* meshRendererUI;
 

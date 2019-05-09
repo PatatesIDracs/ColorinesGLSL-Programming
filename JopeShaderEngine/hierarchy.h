@@ -12,6 +12,7 @@ class Hierarchy;
 class Inspector;
 class GameObject;
 class Resource;
+class ResourceMesh;
 class QOpenGLWidget;
 
 class Hierarchy : public QWidget
@@ -51,9 +52,10 @@ private:
     GameObject* selected;
     uint count;
 
-    QVector<Resource*> resources;
-    uint resourceCount;
+    QVector<ResourceMesh*> meshResources;
 
+    // QVector<Resource*> resources;
+    uint resourceCount;
 
 private:
     void PrintObjects();

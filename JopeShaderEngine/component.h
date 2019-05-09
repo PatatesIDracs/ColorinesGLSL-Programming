@@ -20,7 +20,7 @@ public:
     Component(GameObject* parent, COMP_TYPE type);
     virtual ~Component();
 
-
+    virtual void UpdateComponent();
     virtual void SetInspectorLayout(QVBoxLayout* inspectorLayout);
     virtual void HideInspectorLayout(QVBoxLayout* inspector_layout);
 

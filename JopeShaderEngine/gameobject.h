@@ -8,18 +8,19 @@ class QDataStream;
 class QVBoxLayout;
 class Component;
 class CompTransform;
+class ResourceMesh;
 enum COMP_TYPE;
 
 class GameObject
 {
 public:
-    GameObject(int i, GameObject* parent = nullptr);
+    GameObject(int i, QVector<ResourceMesh*>* meshResources, GameObject* parent = nullptr);
     ~GameObject();
 
     void Save(QDataStream &stream);
     void Load(QDataStream &stream);
 
-
+    void UpdateComponents();
     void SetInspectorLayout(QVBoxLayout* inspector_layout);
     void HideInspectorLayout(QVBoxLayout* inspector_layout);
 
@@ -27,6 +28,7 @@ public:
     Component *GetComponentByType(COMP_TYPE comp_type);
 
 public:
+    int id;
     QString name;
     GameObject* parent;
 

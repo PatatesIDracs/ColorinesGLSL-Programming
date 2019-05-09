@@ -182,6 +182,9 @@ void OpenGLWidget::paintGL()
 
             CompMeshRenderer* compMesh = i.value();
 
+            if(compMesh->GetMeshID() < 0)
+                continue;
+
             program.setUniformValue("worldViewMatrix", cameraTransfrom * compMesh->parent->GetTransform()->GetGlobalTransform());
             rMesh = compMesh->mesh;
             /*if(i.key() != previous)
@@ -235,12 +238,9 @@ void OpenGLWidget::AddGameObject(GameObject *obj)
         CompMeshRenderer* renderer = static_cast<CompMeshRenderer*>(obj->GetComponentByType(COMP_TYPE::COMP_MESHRENDER));
         if(renderer)
         {
-            int resourceId = renderer->GetMeshID();
-            if(resourceId <= 0)
-            {
-                objects.insert(static_cast<unsigned int>(resourceId),renderer);
-                std::cout << "insert GO" << std::endl;
-            }
+           objects.insert(static_cast<unsigned int>(obj->id),renderer);
+           std::cout << "insert GO" << std::endl;
+
         }
     }
 }

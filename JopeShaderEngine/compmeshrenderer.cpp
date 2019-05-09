@@ -7,15 +7,21 @@
 #include <QVBoxLayout>
 #include "comptransform.h"
 
-CompMeshRenderer::CompMeshRenderer(GameObject* parent) : Component (parent, COMP_MESHRENDER)
+CompMeshRenderer::CompMeshRenderer(GameObject* parent, QVector<ResourceMesh*>* meshResources) : Component (parent, COMP_MESHRENDER)
 {
     meshRendererUI = new MeshRendererUI();
+    meshRendererUI->SetCompMeshRenderer(this, meshResources);
     transform = static_cast<CompTransform*>(parent->GetComponentByType(COMP_TYPE::COMP_TRANSFORM));
 }
 
 CompMeshRenderer::~CompMeshRenderer()
 {
 
+}
+
+void CompMeshRenderer::UpdateComponent()
+{
+    meshRendererUI->UpdateList();
 }
 
 void CompMeshRenderer::SetInspectorLayout(QVBoxLayout *inspectorLayout)
@@ -32,7 +38,7 @@ void CompMeshRenderer::HideInspectorLayout(QVBoxLayout *inspector_layout)
 
 int CompMeshRenderer::GetMeshID()
 {
-    if(mesh)
+    if(mesh != nullptr)
     {
         return mesh->Id();
     }

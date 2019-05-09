@@ -7,8 +7,9 @@
 #include "compmeshrenderer.h"
 
 
-GameObject::GameObject(int i, GameObject* parent) :parent(parent)
+GameObject::GameObject(int i, QVector<ResourceMesh*>* meshResources, GameObject* parent) :parent(parent)
 {
+    id = i;
     name = "New GameObject ";
     name.append(QString::number(i));
 
@@ -16,7 +17,7 @@ GameObject::GameObject(int i, GameObject* parent) :parent(parent)
         parent->childs.push_back(this);
 
     components.push_back(new CompTransform(this));
-    components.push_back(new CompMeshRenderer(this));
+    components.push_back(new CompMeshRenderer(this, meshResources));
 }
 
 GameObject::~GameObject()
@@ -35,6 +36,14 @@ void GameObject::Save(QDataStream &outstream)
 void GameObject::Load(QDataStream &stream)
 {
 
+}
+
+void GameObject::UpdateComponents()
+{
+    for (int i=0; i < components.size(); i++)
+    {
+        components[i]->UpdateComponent();
+    }
 }
 
 void GameObject::SetInspectorLayout(QVBoxLayout *inspector_layout)
