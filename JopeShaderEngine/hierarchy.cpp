@@ -7,6 +7,7 @@
 #include "comptransform.h"
 #include "compmeshrenderer.h"
 #include "resourcemesh.h"
+#include "resourcematerial.h"
 
 #include <QFileDialog>
 #include <QDir>
@@ -217,6 +218,7 @@ void Hierarchy::OpenFile()
     if(file_name.isNull())
     {
         std::cout << "File NULL" << std::endl;
+        return;
     }
 
     resourceCount++;
@@ -240,5 +242,34 @@ void Hierarchy::OpenFile()
         }
         meshResources.push_back(mesh);
 
+    }
+    else {
+        resourceCount--;
+        delete mesh;
+    }
+}
+
+void Hierarchy::LoadTexture()
+{
+    QString file_name = QFileDialog::getOpenFileName(this, "Open a file", QDir::homePath());
+
+    if(file_name.isNull())
+    {
+        std::cout << "File NULL" << std::endl;
+        return;
+    }
+
+    resourceCount++;
+    ResourceMaterial* material = new ResourceMaterial(resourceCount);
+    material->openGlWidget = openGLWidget;
+
+    if(material->LoadMaterial(file_name))
+    {
+        material->AddInstance();
+        matResources.push_back(material);
+    }
+    else {
+        resourceCount--;
+        delete material;
     }
 }

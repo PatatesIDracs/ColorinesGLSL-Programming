@@ -28,6 +28,7 @@
      <string>File</string>
     </property>
     <addaction name="actionOpenFile"/>
+    <addaction name="actionLoadTexture"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -88,6 +89,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionLoadTexture">
+   <property name="text">
+    <string>Load Texture</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
  </widget>

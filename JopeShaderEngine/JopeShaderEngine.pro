@@ -39,7 +39,8 @@ SOURCES += \
     resourcemesh.cpp \
     submesh.cpp \
     compmeshrenderer.cpp \
-    meshrendererui.cpp
+    meshrendererui.cpp \
+    resourcematerial.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -56,7 +57,8 @@ HEADERS += \
     submesh.h \
     vertexformat.h \
     compmeshrenderer.h \
-    meshrendererui.h
+    meshrendererui.h \
+    resourcematerial.h
 
 FORMS += \
         mainwindow.ui \

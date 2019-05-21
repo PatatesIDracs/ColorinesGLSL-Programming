@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->dock_inspector->setWidget(inspector);
 
     connect(inspector,SIGNAL(SigNameChanged()), hierarchy, SLOT(OnNameChanged()));
-
     connect(ui->actionOpenFile, SIGNAL(triggered()), hierarchy, SLOT(OpenFile()));
+    connect(ui->actionLoadTexture, SIGNAL(triggered()), hierarchy, SLOT(LoadTexture()));
     connect(hierarchy,SIGNAL(SigHierarchyUpdate(GameObject*)), inspector, SLOT(ItemSelected(GameObject*)));
     connect(hierarchy, SIGNAL(SigResourceUpdate(GameObject*)), ui->openGLWidget, SLOT(AddGameObject(GameObject*)));
 }

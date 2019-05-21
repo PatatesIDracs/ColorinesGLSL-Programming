@@ -13,8 +13,8 @@ uniform mat4 worldViewMatrix;
 uniform vec4 albedo;
 uniform vec4 specular;
 uniform float smoothness;
-uniform sampler2D albedoTexture;
-uniform sampler2D normalMap;
+//uniform sampler2D albedoTexture;
+//uniform sampler2D normalMap;
 
 out Data
 {

@@ -13,6 +13,7 @@ class Inspector;
 class GameObject;
 class Resource;
 class ResourceMesh;
+class ResourceMaterial;
 class QOpenGLWidget;
 
 class Hierarchy : public QWidget
@@ -41,6 +42,7 @@ public slots:
     void SaveScene();
 
     void OpenFile();
+    void LoadTexture();
 
 public:
     Inspector* inspector;
@@ -53,6 +55,7 @@ private:
     uint count;
 
     QVector<ResourceMesh*> meshResources;
+    QVector<ResourceMaterial*> matResources;
 
     // QVector<Resource*> resources;
     uint resourceCount;
