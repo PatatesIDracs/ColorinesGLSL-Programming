@@ -30,9 +30,14 @@ public:
     QMatrix4x4 GetViewMatrix();
     QMatrix4x4 GetProjectionMatrix();
 
+    void Update();
+
     void prepareMatrices();
 
     void SetAspectRatio(int width, int height);
+
+    void MoveCamera(QVector3D movement);
+    void RotateCamera(float dx, float dy);
 
 private:
 

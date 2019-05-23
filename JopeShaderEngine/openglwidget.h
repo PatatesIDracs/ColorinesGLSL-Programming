@@ -16,6 +16,11 @@
 
 class CompMeshRenderer;
 
+class QKeyEvent;
+class QMouseEvent;
+class QWheelEvent;
+class QEvent;
+
 class OpenGLWidget :
         public QOpenGLWidget,
         protected QOpenGLFunctions_3_3_Core
@@ -52,6 +57,23 @@ private:
     CompCamera* camera = nullptr;
 
     QTimer timer;
+
+
+    void keyPressEvent(QKeyEvent* event) override;
+    void keyReleaseEvent(QKeyEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
+    //void wheelEvent(QWheelEvent* event) override;
+    //void enterEvent(QEvent* event) override;
+    //void leaveEvent(QEvent* event) override;
+
+
+    float mouse_x = 0;
+    float mouse_y = 0;
+    float mouse_x_motion = 0;
+    float mouse_y_motion = 0;
+    bool camera_rotate = false;
 
 };
 

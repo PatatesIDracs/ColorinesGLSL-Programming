@@ -7,6 +7,10 @@
 #include "resourcemesh.h"
 
 #include <QMatrix4x4>
+#include <QKeyEvent>
+#include <QMouseEvent>
+#include <QWheelEvent>
+#include <QEvent>
 
 #define sphereH 32
 #define sphereV 16
@@ -14,7 +18,9 @@
 OpenGLWidget::OpenGLWidget(QWidget* parent):
     QOpenGLWidget (parent)
 {
-
+    this->setMouseTracking(true);
+    this->setFocus();
+    this->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
     camera = new CompCamera(nullptr);
     setMinimumSize(parent->window()->size());
 
@@ -148,6 +154,7 @@ void OpenGLWidget::DrawTestSphere()
 
 void OpenGLWidget::UpdateScene()
 {
+    camera->Update();
     update();
 }
 
@@ -250,6 +257,63 @@ void OpenGLWidget::finalizeGL()
     //vao.release();
     //vbo.release();
     program.release();
+}
+
+void OpenGLWidget::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_W)
+    {
+        camera->MoveCamera(QVector3D(0,0,1));
+    }
+    if(event->key() == Qt::Key_S)
+    {
+        camera->MoveCamera(QVector3D(0,0,-1));
+    }
+    if(event->key() == Qt::Key_A)
+    {
+        camera->MoveCamera(QVector3D(-1,0,0));
+    }
+    if(event->key() == Qt::Key_D)
+    {
+        camera->MoveCamera(QVector3D(1,0,0));
+    }
+}
+
+void OpenGLWidget::keyReleaseEvent(QKeyEvent *event)
+{
+
+}
+
+void OpenGLWidget::mousePressEvent(QMouseEvent *event)
+{
+    //0 = left //// 1 = right
+
+    if(event->button() == 1)
+    {
+        camera_rotate = true;
+    }
+
+}
+
+void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    mouse_x_motion = event->x() - mouse_x;
+    mouse_y_motion = event->y() - mouse_y;
+    mouse_x = event->x();
+    mouse_y = event->y();
+
+    if(camera_rotate)
+        camera->RotateCamera(mouse_x_motion,mouse_y_motion);
+
+}
+
+void OpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    if(event->button() == 1)
+    {
+        camera_rotate = false;
+    }
+
 }
 
 
