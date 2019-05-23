@@ -5,6 +5,7 @@
 
 class CompMeshRenderer;
 class ResourceMesh;
+class ResourceMaterial;
 
 namespace Ui {
 class MeshRendererUI;
@@ -29,7 +30,8 @@ public slots:
 
 
 public:
-    QVector<ResourceMesh*>* resourceVector;
+    QVector<ResourceMesh*>* resourceMeshVector;
+    QVector<ResourceMaterial*>* resourceMaterialvector;
 
 private:
     Ui::MeshRendererUI *ui;

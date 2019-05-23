@@ -7,7 +7,7 @@
 #include "compmeshrenderer.h"
 
 
-GameObject::GameObject(int i, QVector<ResourceMesh*>* meshResources, GameObject* parent) :parent(parent)
+GameObject::GameObject(int i, QVector<ResourceMesh*>* meshResources, QVector<ResourceMaterial*>* matResources, GameObject* parent) :parent(parent)
 {
     id = i;
     name = "New GameObject ";
@@ -17,7 +17,7 @@ GameObject::GameObject(int i, QVector<ResourceMesh*>* meshResources, GameObject*
         parent->childs.push_back(this);
 
     components.push_back(new CompTransform(this));
-    components.push_back(new CompMeshRenderer(this, meshResources));
+    components.push_back(new CompMeshRenderer(this, meshResources, matResources));
 }
 
 GameObject::~GameObject()

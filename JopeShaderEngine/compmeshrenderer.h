@@ -10,7 +10,7 @@ class MeshRendererUI;
 class CompMeshRenderer : public Component
 {
 public:
-    CompMeshRenderer(GameObject* parent, QVector<ResourceMesh*>* meshResources);
+    CompMeshRenderer(GameObject* parent, QVector<ResourceMesh*>* meshResources, QVector<ResourceMaterial*>* matResources);
     ~CompMeshRenderer();
 
     void UpdateComponent();
@@ -25,6 +25,9 @@ public:
     ResourceMesh* mesh = nullptr;
 
     MeshRendererUI* meshRendererUI;
+
+    int textureId = -1;
+    int normalId = -1;
 
 };
 

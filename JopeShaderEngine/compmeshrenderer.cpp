@@ -7,7 +7,7 @@
 #include <QVBoxLayout>
 #include "comptransform.h"
 
-CompMeshRenderer::CompMeshRenderer(GameObject* parent, QVector<ResourceMesh*>* meshResources) : Component (parent, COMP_MESHRENDER)
+CompMeshRenderer::CompMeshRenderer(GameObject* parent, QVector<ResourceMesh*>* meshResources, QVector<ResourceMaterial*>* matResources) : Component (parent, COMP_MESHRENDER)
 {
     meshRendererUI = new MeshRendererUI();
     meshRendererUI->SetCompMeshRenderer(this, meshResources);

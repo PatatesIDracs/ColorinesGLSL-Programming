@@ -2,6 +2,7 @@
 #include "ui_meshrendererui.h"
 #include "compmeshrenderer.h"
 #include "resourcemesh.h"
+#include "resourcematerial.h"
 
 #include <iostream>
 
@@ -22,7 +23,7 @@ MeshRendererUI::~MeshRendererUI()
 void MeshRendererUI::SetCompMeshRenderer(CompMeshRenderer* newCompMeshRenderer, QVector<ResourceMesh*>* meshResources)
 {
     compMeshRenderer = newCompMeshRenderer;
-    resourceVector = meshResources;
+    resourceMeshVector = meshResources;
     UpdateList();
 }
 
@@ -30,9 +31,9 @@ void MeshRendererUI::UpdateList()
 {
     ui->meshBox->clear();
     ui->meshBox->addItem("(none)", -1);
-    for(int i = 0; i < resourceVector->length(); i++)
+    for(int i = 0; i < resourceMeshVector->length(); i++)
     {
-        ui->meshBox->addItem((*resourceVector)[i]->GetName(), (*resourceVector)[i]->Id());
+        ui->meshBox->addItem((*resourceMeshVector)[i]->GetName(), (*resourceMeshVector)[i]->Id());
     }
 }
 
@@ -44,13 +45,17 @@ void MeshRendererUI::ChangeResourceMesh()
         compMeshRenderer->mesh = nullptr;
     }
 
-    for(int i = 0; i < resourceVector->length(); i++)
+    for(int i = 0; i < resourceMeshVector->length(); i++)
     {
-        if((*resourceVector)[i]->Id() == ui->meshBox->currentData())
+        if((*resourceMeshVector)[i]->Id() == ui->meshBox->currentData())
         {
-             compMeshRenderer->mesh = (*resourceVector)[i];
+             compMeshRenderer->mesh = (*resourceMeshVector)[i];
         }
-    }    
+    }
+
+
+    //TODO: Create submesh combobox
+
 }
 
 

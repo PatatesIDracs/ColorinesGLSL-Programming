@@ -9,12 +9,13 @@ class QVBoxLayout;
 class Component;
 class CompTransform;
 class ResourceMesh;
+class ResourceMaterial;
 enum COMP_TYPE;
 
 class GameObject
 {
 public:
-    GameObject(int i, QVector<ResourceMesh*>* meshResources, GameObject* parent = nullptr);
+    GameObject(int i, QVector<ResourceMesh*>* meshResources, QVector<ResourceMaterial*>* matResources, GameObject* parent = nullptr);
     ~GameObject();
 
     void Save(QDataStream &stream);
