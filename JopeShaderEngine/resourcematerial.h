@@ -17,10 +17,18 @@ public:
 
     bool LoadMaterial(QString fileName);
 
+    int GetTexture() { return textureId; }
+
+    void FromHeightMapToNormalMap();
+
     QOpenGLWidget* openGlWidget;
+
 private:
 
-    QImage texture;
+
+    QImage image;
+
+    int textureId = -1;
 
 };
 

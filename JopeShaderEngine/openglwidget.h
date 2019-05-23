@@ -77,4 +77,6 @@ private:
 
 };
 
+extern QOpenGLFunctions_3_3_Core *gl;
+
 #endif // OPENGLWIDGET_H

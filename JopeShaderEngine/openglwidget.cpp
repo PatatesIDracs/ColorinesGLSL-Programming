@@ -15,9 +15,12 @@
 #define sphereH 32
 #define sphereV 16
 
+QOpenGLFunctions_3_3_Core * gl = nullptr;
+
 OpenGLWidget::OpenGLWidget(QWidget* parent):
     QOpenGLWidget (parent)
 {
+    gl = this;
     this->setMouseTracking(true);
     this->setFocus();
     this->setFocusPolicy(Qt::FocusPolicy::StrongFocus);

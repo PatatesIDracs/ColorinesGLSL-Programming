@@ -57,7 +57,7 @@ void Hierarchy::CreateNewGO()
     count++;
     int numObj = objects.size();
 
-    selected = new GameObject(count, &meshResources);
+    selected = new GameObject(count, &meshResources, &matResources);
     objects.push_back(selected);
 
     ui->listWidget->addItem(selected->name);
@@ -162,7 +162,7 @@ void Hierarchy::OpenScene()
         uint i = 0;
         for(; i < numObj; i++)
         {
-            GameObject* temp = new GameObject(i, &meshResources);
+            GameObject* temp = new GameObject(i, &meshResources, &matResources);
 
             temp->Load(stream);
 
@@ -265,6 +265,14 @@ void Hierarchy::LoadTexture()
 
     if(material->LoadMaterial(file_name))
     {
+        QMessageBox::StandardButton button = QMessageBox::question(
+                    this, "Load Material Output",
+                    "Resource Material loaded, The texture loaded is a Height Map?");
+        if(button == QMessageBox::Yes)
+        {
+            material->FromHeightMapToNormalMap();
+        }
+
         material->AddInstance();
         matResources.push_back(material);
     }
