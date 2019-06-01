@@ -6,7 +6,7 @@
 #include <QVector3D>
 #include <QMessageBox>
 
-ResourceMaterial::ResourceMaterial(unsigned int id) : Resource(RESOURCE_TYPE::RESOURCE_MESH, id)
+ResourceMaterial::ResourceMaterial(unsigned int id) : Resource(RESOURCE_TYPE::RESOURCE_MESH, id), textureId(-1)
 {
 
 }
@@ -22,7 +22,8 @@ void ResourceMaterial::LoadResource()
 
         gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        gl->glTexImage2D(GL_TEXTURE_2D, 0, image.format(), image.width(), image.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, image.bits());
+        gl->glTexImage2D(GL_TEXTURE_2D, 0, image.format(), image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
+
     }
 }
 

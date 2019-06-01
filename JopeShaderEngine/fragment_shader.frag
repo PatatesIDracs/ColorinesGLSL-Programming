@@ -1,22 +1,23 @@
 #version 330
 
+layout(location = 0)out vec4 outColor;
+
 in Data
 {
     vec3 positionViewspace;
     vec3 normalViewspace;
+    vec2 textCoord;
 } FSIn;
 
-out vec4 outColor;
+uniform vec4 albedo;
+uniform vec4 specular;
+uniform float smoothness;
+
+uniform sampler2D albedoTexture;
 
 void main(void)
 {
-    vec3 L = -normalize(FSIn.positionViewspace);
-    vec3 N = normalize(FSIn.normalViewspace);
+    outColor = texture2D(albedoTexture, FSIn.textCoord);
 
-    vec3 albedo = vec3(1.0);
-    float kD = max(0.0, dot(L,N));
-    outColor.rgb = albedo*kD;
-    outColor.a = 1.0;
-
-    outColor.rgb = pow(outColor.rgb, vec3(1.0/2.4));
+    //outColor.rgb = pow(outColor.rgb, vec3(1.0/2.4));
 }

@@ -10,20 +10,20 @@ layout(location=4) in vec3 bitangent;
 uniform mat4 projectionMatrix;
 uniform mat4 worldViewMatrix;
 
-uniform vec4 albedo;
-uniform vec4 specular;
-uniform float smoothness;
-//uniform sampler2D albedoTexture;
 //uniform sampler2D normalMap;
 
 out Data
 {
     vec3 positionViewspace;
     vec3 normalViewspace;
+    vec2 textCoord;
 } VSOut;
 
 void main(void)
 {
+
+    //VSOut.pixelcolor = vec4(1.0f);
+    VSOut.textCoord = textCoords;
     VSOut.positionViewspace = (worldViewMatrix*vec4(position, 1)).xyz;
     VSOut.normalViewspace = (worldViewMatrix*vec4(normal,0)).xyz;
 

@@ -275,6 +275,7 @@ void Hierarchy::LoadTexture()
 
         material->AddInstance();
         matResources.push_back(material);
+
     }
     else {
         resourceCount--;

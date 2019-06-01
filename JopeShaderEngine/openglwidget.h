@@ -38,6 +38,10 @@ public:
 
     void DrawTestSphere();
 
+
+
+    QVector<ResourceMaterial*>* matResources;
+
 signals:
 
 public slots:
@@ -53,6 +57,9 @@ private:
     QOpenGLShaderProgram program;
 
     QMap<unsigned int, CompMeshRenderer*> objects;
+
+
+
 
     CompCamera* camera = nullptr;
 

@@ -26,6 +26,8 @@ public:
 
     void DrawHierarchy(QWidget* scene);
 
+    QVector<ResourceMaterial*>* GerMatResource() { return &matResources; }
+
 signals:
      void SigHierarchyUpdate(GameObject*);
      void SigResourceUpdate(GameObject*);
