@@ -4,6 +4,10 @@
 #include "resourcemesh.h"
 #include "resourcematerial.h"
 
+#include <QComboBox>
+#include <QLabel>
+#include <QHBoxLayout>
+
 #include <iostream>
 
 MeshRendererUI::MeshRendererUI(QWidget *parent) :
@@ -20,10 +24,11 @@ MeshRendererUI::~MeshRendererUI()
     delete ui;
 }
 
-void MeshRendererUI::SetCompMeshRenderer(CompMeshRenderer* newCompMeshRenderer, QVector<ResourceMesh*>* meshResources)
+void MeshRendererUI::SetCompMeshRenderer(CompMeshRenderer* newCompMeshRenderer, QVector<ResourceMesh*>* meshResources, QVector<ResourceMaterial*>* matResources)
 {
     compMeshRenderer = newCompMeshRenderer;
     resourceMeshVector = meshResources;
+    resourceMaterialvector = matResources;
     UpdateList();
 }
 
@@ -31,9 +36,58 @@ void MeshRendererUI::UpdateList()
 {
     ui->meshBox->clear();
     ui->meshBox->addItem("(none)", -1);
+    ui->meshBox->setCurrentIndex(0);
     for(int i = 0; i < resourceMeshVector->length(); i++)
     {
         ui->meshBox->addItem((*resourceMeshVector)[i]->GetName(), (*resourceMeshVector)[i]->Id());
+        if(compMeshRenderer->mesh != nullptr)
+        {
+            if(compMeshRenderer->mesh->Id() == (*resourceMeshVector)[i]->Id())
+                ui->meshBox->setCurrentIndex(i+1);
+        }
+    }
+
+    //std::cout << "mesh combobox loaded" << std::endl;
+    //Add a combo box for each submesh
+    if(compMeshRenderer != nullptr && compMeshRenderer->mesh != nullptr)
+    {
+        std::cout << "loading material combobox" << std::endl;
+        QVector<SubMesh*>* submeshes = &compMeshRenderer->mesh->submeshes;
+        for(int i = 0; i < submeshes->length(); i++)
+        {
+            if(i < materialComboBoxes.length())
+                materialComboBoxes[i]->clear();
+            else
+            {
+                materialComboBoxes.push_back(new QComboBox());
+                materialLabels.push_back(new QLabel("Submesh " + QString::number(i)));
+                materialLayouts.push_back(new QHBoxLayout());
+                materialLayouts[i]->addWidget(materialLabels[i]);
+                materialLayouts[i]->addWidget(materialComboBoxes[i]);
+                ui->meshRendererVlayout->addLayout(materialLayouts[i]);
+            }
+
+            materialComboBoxes[i]->addItem("(none)", -1 );
+            for(int j = 0; j < resourceMaterialvector->length(); j++)
+            {
+                materialComboBoxes[i]->addItem((*resourceMaterialvector)[j]->GetName(), (*resourceMaterialvector)[j]->Id());
+            }
+        }
+
+        for(int k = submeshes->length(); k < materialComboBoxes.length(); k++)
+        {
+
+            ui->meshRendererVlayout[k].removeWidget(materialComboBoxes[k]);
+            delete materialComboBoxes[k];
+            materialComboBoxes.remove(k);
+            ui->meshRendererVlayout[k].removeWidget(materialLabels[k]);
+            delete materialLabels[k];
+            materialLabels.remove(k);
+
+            delete materialLayouts[k];
+            materialLayouts.remove(k);
+        }
+
     }
 }
 
@@ -55,6 +109,9 @@ void MeshRendererUI::ChangeResourceMesh()
 
 
     //TODO: Create submesh combobox
+
+
+
 
 }
 

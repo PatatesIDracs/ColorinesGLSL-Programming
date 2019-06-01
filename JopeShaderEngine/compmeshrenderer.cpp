@@ -10,7 +10,7 @@
 CompMeshRenderer::CompMeshRenderer(GameObject* parent, QVector<ResourceMesh*>* meshResources, QVector<ResourceMaterial*>* matResources) : Component (parent, COMP_MESHRENDER)
 {
     meshRendererUI = new MeshRendererUI();
-    meshRendererUI->SetCompMeshRenderer(this, meshResources);
+    meshRendererUI->SetCompMeshRenderer(this, meshResources, matResources);
     transform = static_cast<CompTransform*>(parent->GetComponentByType(COMP_TYPE::COMP_TRANSFORM));
 }
 
