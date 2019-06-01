@@ -20,6 +20,7 @@ public:
 
     int GetTexture() { return textureId; }
     void BindTexture(uint unit);
+    void UnBindTexture(uint unit);
 
     void FromHeightMapToNormalMap();
 

@@ -38,7 +38,7 @@ void ResourceMaterial::UnloadResource()
 bool ResourceMaterial::LoadMaterial(QString fileName)
 {
     image = QImage(fileName);
-    texture = new QOpenGLTexture(image.mirrored());
+    texture = new QOpenGLTexture(image);
     SetName(fileName.section('/', -1));
 
     if(image.isNull())
@@ -50,7 +50,12 @@ bool ResourceMaterial::LoadMaterial(QString fileName)
 void ResourceMaterial::BindTexture(uint unit)
 {
     //if(textureId != -1)
-        texture->bind(unit);
+    texture->bind(unit);
+}
+
+void ResourceMaterial::UnBindTexture(uint unit)
+{
+    gl->glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void ResourceMaterial::FromHeightMapToNormalMap()

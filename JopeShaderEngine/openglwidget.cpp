@@ -190,7 +190,7 @@ void OpenGLWidget::paintGL()
         if(matResources && matResources->size() > 0)
         {
             program.setUniformValue("albedoTexture", 0 );
-            (*matResources)[0]->BindTexture(0);
+            //(*matResources)[0]->BindTexture(0);
         }
 
         int previous = -1;

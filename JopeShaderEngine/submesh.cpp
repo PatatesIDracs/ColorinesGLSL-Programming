@@ -1,4 +1,5 @@
 #include "submesh.h"
+#include "resourcematerial.h"
 
 #include <iostream>
 
@@ -89,7 +90,8 @@ void SubMesh::UnBind()
 void SubMesh::Draw()
 {
     int numVertices = dataSize/vertexFormat.size;
-
+    if(matResource != nullptr)
+        matResource->BindTexture(0);
     vao.bind();
     if(indicesSize > 0)
     {
@@ -99,6 +101,8 @@ void SubMesh::Draw()
         glfuncs->glDrawArrays(GL_TRIANGLES, 0, numVertices);
     }
     vao.release();
+    if(matResource != nullptr)
+        matResource->UnBindTexture(0);
 }
 
 void SubMesh::Destroy()

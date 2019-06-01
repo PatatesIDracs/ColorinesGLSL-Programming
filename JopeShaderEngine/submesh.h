@@ -8,6 +8,7 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
 
+class ResourceMaterial;
 
 class SubMesh
 {
@@ -36,6 +37,8 @@ public:
     QOpenGLVertexArrayObject vao;
 
     QOpenGLFunctions *glfuncs = nullptr;
+
+    ResourceMaterial* matResource = nullptr;
 
 };
 

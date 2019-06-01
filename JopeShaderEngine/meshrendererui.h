@@ -30,7 +30,7 @@ private:
 
 public slots:
     void ChangeResourceMesh();
-
+    void ChangeResourceMaterials();
 
 public:
     QVector<ResourceMesh*>* resourceMeshVector;
