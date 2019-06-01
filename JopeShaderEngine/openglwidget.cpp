@@ -178,7 +178,7 @@ void OpenGLWidget::paintGL()
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    glEnable(GL_TEXTURE_2D);
+
     if(program.bind())
     {
         program.setUniformValue("projectionMatrix", camera->GetProjectionMatrix());
@@ -189,12 +189,8 @@ void OpenGLWidget::paintGL()
 
         if(matResources && matResources->size() > 0)
         {
-            GLuint textureid = (*matResources)[0]->GetTexture();
             program.setUniformValue("albedoTexture", 0 );
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, textureid);
-
-            std::cout << "Texture Binded " << textureid << std::endl;
+            (*matResources)[0]->BindTexture(0);
         }
 
         int previous = -1;

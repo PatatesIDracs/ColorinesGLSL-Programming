@@ -6,6 +6,7 @@
 #include <QImage>
 
 class QOpenGLWidget;
+class QOpenGLTexture;
 
 class ResourceMaterial : public Resource
 {
@@ -18,6 +19,7 @@ public:
     bool LoadMaterial(QString fileName);
 
     int GetTexture() { return textureId; }
+    void BindTexture(uint unit);
 
     void FromHeightMapToNormalMap();
 
@@ -27,7 +29,7 @@ private:
 
 
     QImage image;
-
+    QOpenGLTexture* texture = nullptr;
     int textureId = -1;
 
 };

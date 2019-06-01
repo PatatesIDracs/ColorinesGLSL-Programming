@@ -5,6 +5,7 @@
 #include <QOpenGLWidget>
 #include <QVector3D>
 #include <QMessageBox>
+#include <QOpenGLTexture>
 
 ResourceMaterial::ResourceMaterial(unsigned int id) : Resource(RESOURCE_TYPE::RESOURCE_MESH, id), textureId(-1)
 {
@@ -14,35 +15,42 @@ ResourceMaterial::ResourceMaterial(unsigned int id) : Resource(RESOURCE_TYPE::RE
 void ResourceMaterial::LoadResource()
 {
 
-    if(textureId == -1){
-        openGlWidget->makeCurrent();
+    //if(textureId == -1){
+        //openGlWidget->makeCurrent();
+        //GLuint textId = 0;
+        //gl->glGenTextures(1, &textId);
+        //gl->glBindTexture(GL_TEXTURE_2D, textId);
+        //
+        //gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        //gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        //gl->glTexImage2D(GL_TEXTURE_2D, 0, image.format(), image.width(), image.height(), 0, image.format(), GL_UNSIGNED_BYTE, image.bits());
 
-        gl->glGenTextures(1,(GLuint*) &textureId);
-        gl->glBindTexture(GL_TEXTURE_2D, (GLuint)textureId );
 
-        gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        gl->glTexImage2D(GL_TEXTURE_2D, 0, image.format(), image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
-
-    }
+    //}
 }
 
 void ResourceMaterial::UnloadResource()
 {
-    if(textureId != -1)
-        gl->glDeleteTextures(1,(GLuint*) &textureId);
+    //if(textureId != -1)
+        //gl->glDeleteTextures(1,(GLuint*) &textureId);
 }
 
 bool ResourceMaterial::LoadMaterial(QString fileName)
 {
     image = QImage(fileName);
-
+    texture = new QOpenGLTexture(image.mirrored());
     SetName(fileName.section('/', -1));
 
     if(image.isNull())
         return false;
     else return true;
 
+}
+
+void ResourceMaterial::BindTexture(uint unit)
+{
+    //if(textureId != -1)
+        texture->bind(unit);
 }
 
 void ResourceMaterial::FromHeightMapToNormalMap()
