@@ -135,8 +135,8 @@ void OpenGLWidget::InitDefered()
 
 
 
-    GLenum buffers[] = {GL_COLOR_ATTACHMENT0};
-    glDrawBuffers(1,buffers);
+    //GLenum buffers[] = {GL_COLOR_ATTACHMENT0};
+    //glDrawBuffers(1,buffers);
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -208,10 +208,8 @@ void OpenGLWidget::paintGL()
 
         ResourceMesh* rMesh = nullptr;
 
-        if(matResources && matResources->size() > 0)
-        {
-            program.setUniformValue("albedoTexture", 0 );
-        }
+        program.setUniformValue("albedoTexture", 0 );
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         int previous = -1;
         QMap<unsigned int, CompMeshRenderer*>::iterator i;
