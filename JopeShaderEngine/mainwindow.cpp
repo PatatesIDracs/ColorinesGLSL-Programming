@@ -41,5 +41,4 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     size.setWidth(size.width() - ui->dock_hierarchy->size().width());
 
     resizeDocks({ui->dockWidget}, {size.width()}, Qt::Horizontal);
-    ui->openGLWidget->resizeGL(size.width(), size.height());
 }

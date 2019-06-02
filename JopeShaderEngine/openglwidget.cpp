@@ -181,11 +181,11 @@ void OpenGLWidget::resizeGL(int w, int h)
     screen_width = w;
     screen_height = h;
 
-    //glDeleteTextures(1, &colorTexture);
-    //glDeleteTextures(1, &depthTexture);
-    //glDeleteFramebuffers(1, &fbo);
+    glDeleteTextures(1, &colorTexture);
+    glDeleteTextures(1, &depthTexture);
+    glDeleteFramebuffers(1, &fbo);
 
-    //InitDefered();
+    InitDefered();
 }
 
 void OpenGLWidget::paintGL()
