@@ -237,11 +237,11 @@ void Hierarchy::OpenFile()
             CompMeshRenderer* renderer = static_cast<CompMeshRenderer*>(selected->GetComponentByType(COMP_TYPE::COMP_MESHRENDER));
 
             renderer->mesh = mesh;
-            mesh->AddInstance();
 
         }
-        meshResources.push_back(mesh);
+        mesh->AddInstance();
 
+        meshResources.push_back(mesh);
     }
     else {
         resourceCount--;
@@ -265,13 +265,13 @@ void Hierarchy::LoadTexture()
 
     if(material->LoadMaterial(file_name))
     {
-        QMessageBox::StandardButton button = QMessageBox::question(
-                    this, "Load Material Output",
-                    "Resource Material loaded, The texture loaded is a Height Map?");
-        if(button == QMessageBox::Yes)
-        {
-            material->FromHeightMapToNormalMap();
-        }
+        //QMessageBox::StandardButton button = QMessageBox::question(
+        //            this, "Load Material Output",
+        //            "Resource Material loaded, The texture loaded is a Height Map?");
+        //if(button == QMessageBox::Yes)
+        //{
+        //    material->FromHeightMapToNormalMap();
+        //}
 
         material->AddInstance();
         matResources.push_back(material);
