@@ -38,7 +38,7 @@ public:
 
     void DrawTestSphere();
 
-
+    void InitDefered();
 
     QVector<ResourceMaterial*>* matResources;
 
@@ -55,6 +55,7 @@ private:
     QOpenGLBuffer vbo;
     QOpenGLVertexArrayObject vao;
     QOpenGLShaderProgram program;
+    QOpenGLShaderProgram quadProgram;
 
     QMap<unsigned int, CompMeshRenderer*> objects;
 
@@ -82,6 +83,13 @@ private:
     float mouse_y_motion = 0;
     bool camera_rotate = false;
 
+    //paint textures
+    GLuint colorTexture;
+    GLuint depthTexture;
+    GLuint fbo;
+
+    int screen_width;
+    int screen_height;
 };
 
 extern QOpenGLFunctions_3_3_Core *gl;

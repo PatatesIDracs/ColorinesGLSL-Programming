@@ -12,6 +12,7 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QEvent>
+#include <QOpenGLFramebufferObject>
 
 #define sphereH 32
 #define sphereV 16
@@ -21,6 +22,8 @@ QOpenGLFunctions_3_3_Core * gl = nullptr;
 OpenGLWidget::OpenGLWidget(QWidget* parent):
     QOpenGLWidget (parent)
 {
+    screen_width = width();
+    screen_height = height();
     gl = this;
     this->setMouseTracking(true);
     this->setFocus();
@@ -49,40 +52,58 @@ void OpenGLWidget::initializeGL()
 
     connect(context(), SIGNAL(aboutToBeDestroyed()), this, SLOT(finalizeGL()));
 
+    float quadVertices[] = { -1.0, -1.0, 0.0,       1.0, 1.0, 1.0,      0.0f, 0.0f,
+                             1.0, 1.0, 0.0,         1.0, 1.0, 1.0,      1.0f, 1.0f,
+                            -1.0, 1.0, 0.0,         1.0, 1.0, 1.0,      0.0f, 1.0f,
+                            -1.0, -1.0, 0.0,        1.0, 1.0, 1.0,      0.0f, 0.0f,
+                            1.0, -1.0, 0.0,         1.0, 1.0, 1.0,      1.0f, 0.0f,
+                            1.0, 1.0, 0.0,          1.0, 1.0, 1.0,      1.0f, 1.0f};
+
+
     program.create();
-    //program.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader1_vert.vert");
-    //program.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader1_frag.frag");
     program.addShaderFromSourceFile(QOpenGLShader::Vertex, "vertex_shader.vert");
     program.addShaderFromSourceFile(QOpenGLShader::Fragment, "fragment_shader.frag");
     program.link();
+    InitDefered();
     program.bind();
 
-    //VBO
-/*    QVector3D vertices[] = {
-        QVector3D(-0.5f,-0.5f,0.0f),  QVector3D(1.0f,0.0f,0.0f),
-        QVector3D(0.5f,-0.5f,0.0f),QVector3D(0.0f,1.0f,.0f),
-        QVector3D(0.0f,0.5f,0.0f),QVector3D(0.0f,0.5f,1.0f)
-    };
+
+
+    program.release();
+    quadProgram.create();
+    quadProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "Shaders/quad_vert_shader.vert");
+    quadProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "Shaders/quad_frag_shader.frag");
+    quadProgram.link();
+    quadProgram.bind();
+
     vbo.create();
     vbo.bind();
     vbo.setUsagePattern((QOpenGLBuffer::UsagePattern::StaticDraw));
-    vbo.allocate(vertices, 6*sizeof (QVector3D));
+    vbo.allocate(quadVertices, 49*sizeof(float));
 
     vao.create();
     vao.bind();
     const GLint compCount = 3;
-    const int strideBytes = 2*sizeof (QVector3D);
+    const int strideBytes = 8*sizeof (float);
     const int offsetBytes0 = 0;
-    const int offsetBytes1 = sizeof (QVector3D);
+    const int offsetBytes1 = sizeof(float) * 3;
+    const int offsetBytes2 = sizeof(float) * 6;
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
     glVertexAttribPointer(0,compCount,GL_FLOAT, GL_FALSE, strideBytes, (void*)(offsetBytes0));
     glVertexAttribPointer(1,compCount,GL_FLOAT, GL_FALSE, strideBytes, (void*)(offsetBytes1));
+    glVertexAttribPointer(2,compCount,GL_FLOAT, GL_FALSE, strideBytes, (void*)(offsetBytes2));
+
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     vao.release();
-    vbo.release();*/
-    //DrawTestSphere();
-    program.release();
+    vbo.release();
+
+    quadProgram.release();
+
 
 }
 
@@ -129,16 +150,13 @@ void OpenGLWidget::DrawTestSphere()
     vbo.create();
     vbo.bind();
     vbo.setUsagePattern((QOpenGLBuffer::UsagePattern::StaticDraw));
-    std::cout << "1" << std::endl;
-    std::cout << "sphere size 1= " << sizeof (sphere) << std::endl;
-    vbo.allocate(sphere[0], sizeof(sphere));
 
+    vbo.allocate(sphere[0], sizeof(sphere));
 
     ibo.create();
     ibo.bind();
     ibo.setUsagePattern(QOpenGLBuffer::UsagePattern::StaticDraw);
     ibo.allocate(sphereIndices[0], int((sphereH*sphereV*6)*sizeof(unsigned int)));
-     std::cout << "2" << std::endl;
 
     const GLint compCount = 3;
     const int strideBytes = 2*sizeof (QVector3D);
@@ -148,12 +166,70 @@ void OpenGLWidget::DrawTestSphere()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(0,compCount,GL_FLOAT, GL_FALSE, strideBytes, (void*)(offsetBytes0));
     glVertexAttribPointer(1,compCount,GL_FLOAT, GL_FALSE, strideBytes, (void*)(offsetBytes1));
-    std::cout << "3" << std::endl;
+
     vao.release();
     vbo.release();
     ibo.release();
-     std::cout << "4" << std::endl;
 
+}
+
+void OpenGLWidget::InitDefered()
+{
+    std::cout << "Hieght:" << screen_height << " Width:" << screen_width << std::endl;
+    //Render to texture init
+    glGenTextures(1, &colorTexture);
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glGenTextures(1, &depthTexture);
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, screen_width, screen_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, colorTexture,0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_TEXTURE_2D, depthTexture,0);
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+
+
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0};
+    glDrawBuffers(1,buffers);
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+    switch (status)
+    {
+    case GL_FRAMEBUFFER_COMPLETE://Everything'sOK
+        qDebug() << "Framebuffer is Veri gut patates amb suc";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+        qDebug() << "FramebufferERROR: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+        qDebug() << "Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_UNSUPPORTED:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_UNSUPPORTED";
+        break;
+    default:
+        qDebug() << "Framebuffer ERROR: Unknown ERROR";
+        break;
+    }
 }
 
 void OpenGLWidget::UpdateScene()
@@ -168,29 +244,39 @@ void OpenGLWidget::resizeGL(int w, int h)
 
     resize(w,h);
     camera->SetAspectRatio(w,h);
+    screen_width = w;
+    screen_height = h;
 
+    //glDeleteTextures(1, &colorTexture);
+    //glDeleteTextures(1, &depthTexture);
+    //glDeleteFramebuffers(1, &fbo);
+
+    //InitDefered();
 }
 
 void OpenGLWidget::paintGL()
 {
-    glClearColor(0.5f,0.5f,0.5f,1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER,fbo);
+    glClearDepth(1.0);
+    glClearColor(1.0f,0.5f,0.5f,1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0};
+    glDrawBuffers(1,buffers);
 
     if(program.bind())
     {
         program.setUniformValue("projectionMatrix", camera->GetProjectionMatrix());
         QMatrix4x4 cameraTransfrom = camera->GetViewMatrix();
 
-
         ResourceMesh* rMesh = nullptr;
 
         if(matResources && matResources->size() > 0)
         {
             program.setUniformValue("albedoTexture", 0 );
-            //(*matResources)[0]->BindTexture(0);
         }
 
         int previous = -1;
@@ -204,46 +290,30 @@ void OpenGLWidget::paintGL()
                 continue;
 
             program.setUniformValue("worldViewMatrix", cameraTransfrom * compMesh->parent->GetTransform()->GetGlobalTransform());
-            rMesh = compMesh->mesh;
-            /*if(i.key() != previous)
-            {
-                if(rMesh)
-                    rMesh->UnBind();
-                previous = i.key();
-
-                rMesh = compMesh->mesh;
-                if(rMesh)
-                {
-                    rMesh->Bind();
-                }
-
-            }*/
+            rMesh = compMesh->mesh;            
 
             if(rMesh)
             {
                 rMesh->Draw();
             }
-            // Bind Textures
-
-
 
         }
-
-        if(rMesh != nullptr)
-            rMesh->UnBind();
-
-       //vao.bind();
-       //std::cout << "Going to draw sphere" << std::endl;
-       //glDrawElements(GL_TRIANGLES, (sphereH*sphereV*6), GL_UNSIGNED_INT, nullptr);
-       //std::cout << "Not crashed" << std::endl;
-       //vao.release();
-
-       //vao.bind();
-       //glDrawArrays(GL_TRIANGLES, 0, 3);
-       //vao.release();
        program.release();
-       //std::cout << "DrawArray" << std::endl;
     }
+
+    QOpenGLFramebufferObject::bindDefault();
+    //glBindFramebuffer(GL_FRAMEBUFFER,0);
+
+    glClearColor(1.0f,1.0f,1.0f,1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    quadProgram.bind();
+    quadProgram.setUniformValue("colorTexture", 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    vao.bind();
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    vao.release();
+    quadProgram.release();
 
 }
 
