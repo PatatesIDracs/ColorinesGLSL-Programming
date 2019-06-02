@@ -36,7 +36,6 @@ public:
     void resizeGL(int w, int h) override;
     void paintGL() override;
 
-    void DrawTestSphere();
 
     void InitDefered();
 
