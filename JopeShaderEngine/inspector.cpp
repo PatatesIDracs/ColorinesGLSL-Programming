@@ -23,9 +23,9 @@ Inspector::Inspector(QWidget *parent) :
     //Set the layout
     layout = new QVBoxLayout;
     layout->addWidget(name);
-    layout->addItem(spacer);
+    //layout->addItem(spacer);
     setLayout(layout);
-
+    layout->setAlignment(Qt::AlignTop);
     //Slot connections
     connect(name,SIGNAL(editingFinished()),this, SLOT(TextChanged()));
 }
@@ -38,18 +38,18 @@ void Inspector::SetSelectedGO(GameObject *selected)
 {
     if(current_go != nullptr)
     {
-        layout->removeItem(spacer);
+        //layout->removeItem(spacer);
         current_go->HideInspectorLayout(layout);
-        layout->addItem(spacer);
+        //layout->addItem(spacer);
     }
 
     current_go = selected;
     name->setText(current_go->name);
-    layout->removeItem(spacer);
+    //layout->removeItem(spacer);
     current_go->UpdateComponents();
     current_go->SetInspectorLayout(layout);
 
-    layout->addItem(spacer);
+    //layout->addItem(spacer);
 
 }
 

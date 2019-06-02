@@ -68,9 +68,17 @@ void MeshRendererUI::UpdateList()
                 connect(materialComboBoxes[i], SIGNAL(activated(int)), this,SLOT(ChangeResourceMaterials()));
             }
             materialComboBoxes[i]->addItem("(none)", -1 );
+            materialComboBoxes[i]->setCurrentIndex(0);
             for(int j = 0; j < resourceMaterialvector->length(); j++)
             {
                 materialComboBoxes[i]->addItem((*resourceMaterialvector)[j]->GetName(), (*resourceMaterialvector)[j]->Id());
+                if((*submeshes)[i]->matResource != nullptr)
+                {
+                    if((*submeshes)[i]->matResource->Id() == (*resourceMaterialvector)[j]->Id())
+                    {
+                        materialComboBoxes[i]->setCurrentIndex(j+1);
+                    }
+                }
             }
         }
 
