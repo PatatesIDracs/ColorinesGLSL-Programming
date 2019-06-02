@@ -14,18 +14,17 @@ uniform mat4 worldViewMatrix;
 
 out Data
 {
-    vec3 positionViewspace;
-    vec3 normalViewspace;
+    vec3 normalLocalspace;
     vec2 textCoord;
+    vec3 positionViewspace;
 } VSOut;
 
 void main(void)
 {
-
-    //VSOut.pixelcolor = vec4(1.0f);
     VSOut.textCoord = textCoords;
+
+    VSOut.normalLocalspace = (worldViewMatrix*vec4(normal,0)).xyz;
     VSOut.positionViewspace = (worldViewMatrix*vec4(position, 1)).xyz;
-    VSOut.normalViewspace = (worldViewMatrix*vec4(normal,0)).xyz;
 
     gl_Position = projectionMatrix*vec4(VSOut.positionViewspace, 1.0);
 }
