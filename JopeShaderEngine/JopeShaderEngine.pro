@@ -77,7 +77,9 @@ DISTFILES += \
     vertex_shader.vert \
     fragment_shader.frag \
     Shaders/quad_vert_shader.vert \
-    Shaders/quad_frag_shader.frag
+    Shaders/quad_frag_shader.frag \
+    Shaders/light_vert_shader.vert \
+    Shaders/light_frag_shader.frag
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimpd
