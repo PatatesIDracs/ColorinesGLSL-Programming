@@ -106,6 +106,12 @@ void OpenGLWidget::initializeGL()
 
     blurProgram.release();
 
+    //Create light program
+    lightProgram.create();
+    lightProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "Shaders/light_vert_shader.vert");
+    lightProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "Shaders/light_frag_shader.frag");
+    lightProgram.link();
+
     quadProgram.create();
     quadProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "Shaders/quad_vert_shader.vert");
     quadProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "Shaders/quad_frag_shader.frag");
@@ -333,14 +339,38 @@ void OpenGLWidget::paintGL()
     }
 
    QOpenGLFramebufferObject::bindDefault();
-   //glBindFramebuffer(GL_FRAMEBUFFER,0);
+
+
+   //glClearColor(0.0f,0.0f,0.0f,0.0f);
+   //glClear(GL_COLOR_BUFFER_BIT);
+   //lightProgram.bind();
+   //lightProgram.setUniformValue("colorTex", 0);
+   //lightProgram.setUniformValue("normalTex", 1);
+   //lightProgram.setUniformValue("posTex", 2);
+   //glActiveTexture(GL_TEXTURE0);
+   //glBindTexture(GL_TEXTURE_2D, colorTexture);
+   //glActiveTexture(GL_TEXTURE1);
+   //glBindTexture(GL_TEXTURE_2D, normalTexture);
+   //glActiveTexture(GL_TEXTURE2);
+   //glBindTexture(GL_TEXTURE_2D, posTexture);
+   //
+   //vao.bind();
+   //glDrawArrays(GL_TRIANGLES, 0, 6);
+   //vao.release();
+   //
+   //glBindTexture(GL_TEXTURE_2D, 0);
+   //glActiveTexture(GL_TEXTURE1);
+   //glBindTexture(GL_TEXTURE_2D, 0);
+   //glActiveTexture(GL_TEXTURE0);
+   //glBindTexture(GL_TEXTURE_2D, 0);
+   //lightProgram.release();
 
    glClearColor(0.0f,0.0f,0.0f,1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
    quadProgram.bind();
    quadProgram.setUniformValue("colorTexture", 0);
    glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D, blurTexture);
+   glBindTexture(GL_TEXTURE_2D, colorTexture);
    vao.bind();
    glDrawArrays(GL_TRIANGLES, 0, 6);
    vao.release();

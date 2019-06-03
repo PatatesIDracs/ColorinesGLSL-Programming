@@ -59,6 +59,7 @@ private:
     QOpenGLShaderProgram program;
     QOpenGLShaderProgram quadProgram;
     QOpenGLShaderProgram blurProgram;
+    QOpenGLShaderProgram lightProgram;
 
     QMap<unsigned int, CompMeshRenderer*> objects;
 

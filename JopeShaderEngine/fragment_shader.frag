@@ -4,6 +4,7 @@ layout(location = 0)out vec4 outColor;
 layout(location = 1)out vec4 outNormal;
 layout(location = 2)out vec4 outPosition;
 
+
 in Data
 {
     vec3 normalLocalspace;
@@ -31,9 +32,11 @@ void main(void)
     ambient = albedo * ambientTerm;
     ambient.a = 1.0f;
 
-    outColor.rgb = ambient.rgb + albedo.rgb * dot(lightDir,FSIn.normalLocalspace) * lightColor;
+    //outColor.rgb = ambient.rgb + albedo.rgb * dot(lightDir,FSIn.normalLocalspace) * lightColor;
+    outColor.rgb = albedo.rgb;
     outColor.a = 1.0f;
 
     outNormal = vec4(FSIn.normalLocalspace,1);
     outPosition = vec4(FSIn.positionWorld, 1);
+
 }
