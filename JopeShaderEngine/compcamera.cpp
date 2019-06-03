@@ -109,7 +109,7 @@ void CompCamera::MoveCamera(QVector3D movement)
     }
 
 
-    position += moveVec;
+    position += moveVec * 0.1f;
     prepareMatrices();
 
 }

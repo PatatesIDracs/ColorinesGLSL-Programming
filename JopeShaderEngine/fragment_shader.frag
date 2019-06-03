@@ -2,12 +2,14 @@
 
 layout(location = 0)out vec4 outColor;
 layout(location = 1)out vec4 outNormal;
+layout(location = 2)out vec4 outPosition;
 
 in Data
 {
     vec3 normalLocalspace;
     vec2 textCoord;
     vec3 positionViewspace;
+    vec3 positionWorld;
 } FSIn;
 
 uniform mat4 worldViewMatrix;
@@ -33,4 +35,5 @@ void main(void)
     outColor.a = 1.0f;
 
     outNormal = vec4(FSIn.normalLocalspace,1);
+    outPosition = vec4(FSIn.positionWorld, 1);
 }

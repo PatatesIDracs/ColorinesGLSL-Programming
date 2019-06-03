@@ -86,6 +86,7 @@ private:
     GLuint colorTexture;
     GLuint normalTexture;
     GLuint depthTexture;
+    GLuint posTexture;
     GLuint fbo;
 
     int screen_width;

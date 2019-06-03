@@ -17,6 +17,7 @@ out Data
     vec3 normalLocalspace;
     vec2 textCoord;
     vec3 positionViewspace;
+    vec3 positionWorld;
 } VSOut;
 
 void main(void)
@@ -27,4 +28,6 @@ void main(void)
     VSOut.positionViewspace = (worldViewMatrix*vec4(position, 1)).xyz;
 
     gl_Position = projectionMatrix*vec4(VSOut.positionViewspace, 1.0);
+
+    VSOut.positionWorld = (projectionMatrix*vec4(position, 1)).xyz;
 }
