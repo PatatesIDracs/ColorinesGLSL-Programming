@@ -53,13 +53,14 @@ private:
     QOpenGLBuffer ibo;
     QOpenGLBuffer vbo;
     QOpenGLVertexArrayObject vao;
+    QOpenGLBuffer vboblur;
+    QOpenGLVertexArrayObject vaoblur;
+
     QOpenGLShaderProgram program;
     QOpenGLShaderProgram quadProgram;
+    QOpenGLShaderProgram blurProgram;
 
     QMap<unsigned int, CompMeshRenderer*> objects;
-
-
-
 
     CompCamera* camera = nullptr;
 
@@ -87,6 +88,8 @@ private:
     GLuint normalTexture;
     GLuint depthTexture;
     GLuint posTexture;
+    GLuint partialBlurTexture;
+    GLuint blurTexture;
     GLuint fbo;
 
     int screen_width;
