@@ -1,6 +1,7 @@
 #version 330
 
 layout(location = 0)out vec4 outColor;
+layout(location = 1)out vec4 outNormal;
 
 in Data
 {
@@ -31,4 +32,5 @@ void main(void)
     outColor.rgb = ambient.rgb + albedo.rgb * dot(lightDir,FSIn.normalLocalspace) * lightColor;
     outColor.a = 1.0f;
 
+    outNormal = vec4(FSIn.normalLocalspace,1);
 }

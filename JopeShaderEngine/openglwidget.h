@@ -84,6 +84,7 @@ private:
 
     //paint textures
     GLuint colorTexture;
+    GLuint normalTexture;
     GLuint depthTexture;
     GLuint fbo;
 

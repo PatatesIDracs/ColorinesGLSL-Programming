@@ -119,6 +119,14 @@ void OpenGLWidget::InitDefered()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
+    glGenTextures(1, &normalTexture);
+    glBindTexture(GL_TEXTURE_2D, normalTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
     glGenTextures(1, &depthTexture);
     glBindTexture(GL_TEXTURE_2D, depthTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
@@ -130,13 +138,14 @@ void OpenGLWidget::InitDefered()
     glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, colorTexture,0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT1,GL_TEXTURE_2D, normalTexture,0);
     glFramebufferTexture2D(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_TEXTURE_2D, depthTexture,0);
     glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 
 
-    //GLenum buffers[] = {GL_COLOR_ATTACHMENT0};
-    //glDrawBuffers(1,buffers);
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2,buffers);
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -192,14 +201,14 @@ void OpenGLWidget::paintGL()
 {
     glBindFramebuffer(GL_FRAMEBUFFER,fbo);
     glClearDepth(1.0);
-    glClearColor(1.0f,0.5f,0.5f,1.0f);
+    glClearColor(0.5f,0.5f,0.5f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
-    GLenum buffers[] = {GL_COLOR_ATTACHMENT0};
-    glDrawBuffers(1,buffers);
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2,buffers);
 
     if(program.bind())
     {
@@ -208,7 +217,7 @@ void OpenGLWidget::paintGL()
 
         ResourceMesh* rMesh = nullptr;
 
-        program.setUniformValue("albedoTexture", 0 );
+        program.setUniformValue("albedoTexture", 0);
         glBindTexture(GL_TEXTURE_2D, 0);
 
         int previous = -1;
@@ -236,7 +245,7 @@ void OpenGLWidget::paintGL()
     QOpenGLFramebufferObject::bindDefault();
     //glBindFramebuffer(GL_FRAMEBUFFER,0);
 
-    glClearColor(1.0f,1.0f,1.0f,1.0f);
+    glClearColor(0.0f,0.0f,0.0f,0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     quadProgram.bind();
     quadProgram.setUniformValue("colorTexture", 0);
