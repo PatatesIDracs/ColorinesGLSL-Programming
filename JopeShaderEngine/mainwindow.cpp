@@ -15,11 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    hierarchy = new Hierarchy();
+    hierarchy = new Hierarchy(nullptr, ui->openGLWidget);
     ui->dock_hierarchy->setWidget(hierarchy);
-    hierarchy->openGLWidget = ui->openGLWidget;
-    ui->openGLWidget->matResources = hierarchy->GerMatResource();
-
     inspector = new Inspector();
     ui->dock_inspector->setWidget(inspector);
 
@@ -28,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLoadTexture, SIGNAL(triggered()), hierarchy, SLOT(LoadTexture()));
     connect(hierarchy,SIGNAL(SigHierarchyUpdate(GameObject*)), inspector, SLOT(ItemSelected(GameObject*)));
     connect(hierarchy, SIGNAL(SigResourceUpdate(GameObject*)), ui->openGLWidget, SLOT(AddGameObject(GameObject*)));
+    connect(ui->openGLWidget, SIGNAL(OpenGLInitialized()), hierarchy, SLOT(InitBaseModel()));
 
     //Displat modes
     connect(ui->actionColor, SIGNAL(triggered()), ui->openGLWidget, SLOT(SetDisplayColor()));

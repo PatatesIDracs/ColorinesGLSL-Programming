@@ -21,7 +21,7 @@ class Hierarchy : public QWidget
     Q_OBJECT
 
 public:
-    explicit Hierarchy(QWidget *parent = nullptr);
+    explicit Hierarchy(QWidget *parent = nullptr, QOpenGLWidget* openGl = nullptr);
     ~Hierarchy();
 
     void DrawHierarchy(QWidget* scene);
@@ -33,18 +33,21 @@ signals:
      void SigResourceUpdate(GameObject*);
 
 public slots:
-    void CreateNewGO();
-    void RemoveGO();
 
-    void OnItemClicked();
-    void OnNameChanged();
+     void InitBaseModel();
 
-    void CreateNewScene();
-    void OpenScene();
-    void SaveScene();
+     void CreateNewGO();
+     void RemoveGO();
 
-    void OpenFile();
-    void LoadTexture();
+     void OnItemClicked();
+     void OnNameChanged();
+
+     void CreateNewScene();
+     void OpenScene();
+     void SaveScene();
+
+     void OpenFile();
+     void LoadTexture();
 
 public:
     Inspector* inspector;
@@ -64,6 +67,9 @@ private:
 
 private:
     void PrintObjects();
+
+    ResourceMesh* CreateMesh(QString fileName);
+    ResourceMaterial* CreateMaterial(QString fileName);
 
 };
 

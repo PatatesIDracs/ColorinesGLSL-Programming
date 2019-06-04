@@ -151,6 +151,7 @@ void OpenGLWidget::initializeGL()
 
     quadProgram.release();
 
+    emit OpenGLInitialized();
 
 }
 

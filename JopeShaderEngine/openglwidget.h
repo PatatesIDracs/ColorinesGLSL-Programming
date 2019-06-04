@@ -57,9 +57,9 @@ public:
     void LightShader();
     void DepthOfFieldShader();
 
-    QVector<ResourceMaterial*>* matResources;
-
 signals:
+
+    void OpenGLInitialized();
 
 public slots:
     void UpdateScene();

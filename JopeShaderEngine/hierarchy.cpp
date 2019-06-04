@@ -2,8 +2,6 @@
 #include "ui_hierarchy.h"
 #include "gameobject.h"
 
-
-
 #include "comptransform.h"
 #include "compmeshrenderer.h"
 #include "resourcemesh.h"
@@ -17,9 +15,9 @@
 #include <iostream>
 
 
-Hierarchy::Hierarchy(QWidget *parent) :
+Hierarchy::Hierarchy(QWidget *parent, QOpenGLWidget* openGl) :
     QWidget(parent),
-    ui(new Ui::Hierarchy), count(0), resourceCount(0)
+    ui(new Ui::Hierarchy), openGLWidget(openGl), count(0), resourceCount(0)
 {
     ui->setupUi(this);
 
@@ -27,7 +25,6 @@ Hierarchy::Hierarchy(QWidget *parent) :
     connect(ui->button_removeEntity, SIGNAL(clicked()), this, SLOT(RemoveGO()));
 
     connect(ui->listWidget,SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(OnItemClicked()));
-
 }
 
 Hierarchy::~Hierarchy()
@@ -50,6 +47,86 @@ void Hierarchy::DrawHierarchy(QWidget* scene)
     {
         drawnObject = objects[i];
     }
+}
+
+void Hierarchy::InitBaseModel()
+{
+    QString path = QDir::currentPath() + "/Models/";
+
+    ResourceMesh* mesh = CreateMesh(path + "Patrick/Patrick.obj");
+    ResourceMaterial* material = nullptr;
+
+    if(mesh)
+    {
+        material = CreateMaterial(path + "Patrick/Color.png");
+        mesh->submeshes[0]->matResource = material;
+        mesh->submeshes[1]->matResource = material;
+        mesh->submeshes[2]->matResource = material;
+
+        material = CreateMaterial(path + "Patrick/Flowers.png");
+        mesh->submeshes[3]->matResource = material;
+
+        material = CreateMaterial(path + "Patrick/Skin_Patrick.png");
+        mesh->submeshes[4]->matResource = material;
+        mesh->submeshes[5]->matResource = material;
+    }
+
+    mesh = CreateMesh(path + "sponza_crytek/sponza.obj");
+
+    if(mesh)
+    {
+        material = CreateMaterial(path + "sponza_crytek/textures/lion.png");
+        mesh->submeshes[23]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/background.png");
+        mesh->submeshes[3]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/chain_texture.png");
+        mesh->submeshes[20]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/spnza_bricks_a_diff.png");
+        mesh->submeshes[4]->matResource = material;
+        mesh->submeshes[6]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_arch_diff.png");
+        mesh->submeshes[5]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_column_a_diff.png");
+        mesh->submeshes[7]->matResource = material;
+        mesh->submeshes[9]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_column_b_diff.png");
+        mesh->submeshes[11]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_column_c_diff.png");
+        mesh->submeshes[6]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_curtain_blue_diff.png");
+        mesh->submeshes[15]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_curtain_diff.png");
+        mesh->submeshes[12]->matResource = material;
+        mesh->submeshes[16]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_curtain_green_diff.png");
+        mesh->submeshes[14]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_details_diff.png");
+        mesh->submeshes[10]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_fabric_blue_diff.png");
+        mesh->submeshes[17]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_fabric_diff.png");
+        mesh->submeshes[18]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_fabric_green_diff.png");
+        mesh->submeshes[19]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_fabric_purple.png");
+        mesh->submeshes[14]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_flagpole_diff.png");
+        mesh->submeshes[13]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_floor_a_diff.png");
+        mesh->submeshes[8]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_roof_diff.png");
+        mesh->submeshes[24]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_thorn_diff.png");
+        mesh->submeshes[0]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/vase_dif.png");
+        mesh->submeshes[22]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/vase_plant.png");
+        mesh->submeshes[1]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/vase_round.png");
+        mesh->submeshes[2]->matResource = material;
+        mesh->submeshes[21]->matResource = material;
+    }
+
 }
 
 void Hierarchy::CreateNewGO()
@@ -265,20 +342,62 @@ void Hierarchy::LoadTexture()
 
     if(material->LoadMaterial(file_name))
     {
-        //QMessageBox::StandardButton button = QMessageBox::question(
-        //            this, "Load Material Output",
-        //            "Resource Material loaded, The texture loaded is a Height Map?");
-        //if(button == QMessageBox::Yes)
-        //{
-        //    material->FromHeightMapToNormalMap();
-        //}
-
         material->AddInstance();
         matResources.push_back(material);
-
     }
     else {
         resourceCount--;
         delete material;
+    }
+}
+
+ResourceMesh* Hierarchy::CreateMesh(QString fileName)
+{
+    if(fileName.isNull())
+    {
+        std::cout << "File NULL" << std::endl;
+        return nullptr;
+    }
+
+    resourceCount++;
+    ResourceMesh* mesh = new ResourceMesh(resourceCount);
+    mesh->openGlWidget = openGLWidget;
+
+    if(mesh->LoadModel(fileName))
+    {
+        mesh->AddInstance();
+        meshResources.push_back(mesh);
+        return mesh;
+    }
+    else {
+        resourceCount--;
+        delete mesh;
+        return nullptr;
+    }
+}
+
+ResourceMaterial* Hierarchy::CreateMaterial(QString fileName)
+{
+
+    if(fileName.isNull())
+    {
+        std::cout << "File NULL" << std::endl;
+        return nullptr;
+    }
+
+    resourceCount++;
+    ResourceMaterial* material = new ResourceMaterial(resourceCount);
+    material->openGlWidget = openGLWidget;
+
+    if(material->LoadMaterial(fileName))
+    {
+        material->AddInstance();
+        matResources.push_back(material);
+        return material;
+    }
+    else {
+        resourceCount--;
+        delete material;
+        return nullptr;
     }
 }
