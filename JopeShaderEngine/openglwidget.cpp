@@ -327,6 +327,10 @@ void OpenGLWidget::paintGL()
             if(compMesh->GetMeshID() < 0)
                 continue;
 
+            if(compMesh->textureId == -1)
+                program.setUniformValue("hasTexture", false);
+            else program.setUniformValue("hasTexture", true);
+
             program.setUniformValue("worldViewMatrix", cameraTransfrom * compMesh->parent->GetTransform()->GetGlobalTransform());
             rMesh = compMesh->mesh;            
 
@@ -339,7 +343,8 @@ void OpenGLWidget::paintGL()
        program.release();
     }
 
-    BlurShader();
+    if(displayMode == DisplayMode::BLUR)
+        BlurShader();
 
     QOpenGLFramebufferObject::bindDefault();
 

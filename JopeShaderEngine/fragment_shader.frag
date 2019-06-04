@@ -17,6 +17,8 @@ uniform mat4 worldViewMatrix;
 
 uniform sampler2D albedoTexture;
 
+uniform bool hasTexture;
+
 void main(void)
 {
     float ambientTerm = 0.05f;
@@ -26,8 +28,9 @@ void main(void)
     vec3 lightDir = vec3(0.0f,0.0f,1.0f);
     vec3 lightColor = vec3(1.0f,1.0f,1.0f);
 
-
-    albedo = texture2D(albedoTexture, FSIn.textCoord);
+    if(hasTexture)
+        albedo = texture2D(albedoTexture, FSIn.textCoord);
+    else albedo = vec4(0.8);
 
     ambient = albedo * ambientTerm;
     ambient.a = 1.0f;
