@@ -21,6 +21,16 @@ class QMouseEvent;
 class QWheelEvent;
 class QEvent;
 
+enum DisplayMode
+{
+    COLOR,
+    NORMALS,
+    POSITION,
+    DEPTH,
+    LIGHT,
+    BLUR
+};
+
 class OpenGLWidget :
         public QOpenGLWidget,
         protected QOpenGLFunctions_3_3_Core
@@ -48,6 +58,14 @@ public slots:
     void UpdateScene();
     void AddGameObject(GameObject* obj);
     void finalizeGL();
+
+    void SetDisplayColor();
+    void SetDisplayNormals();
+    void SetDisplayPosition();
+    void SetDisplayDepth();
+    void SetDisplayLight();
+    void SetDisplayBlur();
+
 
 private:
 
@@ -97,6 +115,8 @@ private:
 
     int screen_width;
     int screen_height;
+
+    DisplayMode displayMode;
 };
 
 extern QOpenGLFunctions_3_3_Core *gl;

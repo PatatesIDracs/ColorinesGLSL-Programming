@@ -403,6 +403,36 @@ void OpenGLWidget::finalizeGL()
     program.release();
 }
 
+void OpenGLWidget::SetDisplayColor()
+{
+    displayMode = DisplayMode::COLOR;
+}
+
+void OpenGLWidget::SetDisplayNormals()
+{
+    displayMode = DisplayMode::NORMALS;
+}
+
+void OpenGLWidget::SetDisplayPosition()
+{
+    displayMode = DisplayMode::POSITION;
+}
+
+void OpenGLWidget::SetDisplayDepth()
+{
+    displayMode = DisplayMode::DEPTH;
+}
+
+void OpenGLWidget::SetDisplayLight()
+{
+    displayMode = DisplayMode::LIGHT;
+}
+
+void OpenGLWidget::SetDisplayBlur()
+{
+    displayMode = DisplayMode::BLUR;
+}
+
 void OpenGLWidget::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_W)

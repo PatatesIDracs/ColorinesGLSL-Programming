@@ -28,6 +28,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLoadTexture, SIGNAL(triggered()), hierarchy, SLOT(LoadTexture()));
     connect(hierarchy,SIGNAL(SigHierarchyUpdate(GameObject*)), inspector, SLOT(ItemSelected(GameObject*)));
     connect(hierarchy, SIGNAL(SigResourceUpdate(GameObject*)), ui->openGLWidget, SLOT(AddGameObject(GameObject*)));
+
+    //Displat modes
+    connect(ui->actionColor, SIGNAL(triggered()), ui->openGLWidget, SLOT(SetDisplayColor()));
+    connect(ui->actionNormal, SIGNAL(triggered()), ui->openGLWidget, SLOT(SetDisplayNormals()));
+    connect(ui->actionPosition, SIGNAL(triggered()), ui->openGLWidget, SLOT(SetDisplayPosition()));
+    connect(ui->actionDepth, SIGNAL(triggered()), ui->openGLWidget, SLOT(SetDisplayDepth()));
+    connect(ui->actionFinal_Light, SIGNAL(triggered()), ui->openGLWidget, SLOT(SetDisplayLight()));
+    connect(ui->actionBlur, SIGNAL(triggered()), ui->openGLWidget, SLOT(SetDisplayBlur()));
 }
 
 MainWindow::~MainWindow()

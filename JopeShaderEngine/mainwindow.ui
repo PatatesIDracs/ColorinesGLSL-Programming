@@ -30,7 +30,19 @@
     <addaction name="actionOpenFile"/>
     <addaction name="actionLoadTexture"/>
    </widget>
+   <widget class="QMenu" name="menuDisplay">
+    <property name="title">
+     <string>Display</string>
+    </property>
+    <addaction name="actionColor"/>
+    <addaction name="actionNormal"/>
+    <addaction name="actionPosition"/>
+    <addaction name="actionDepth"/>
+    <addaction name="actionFinal_Light"/>
+    <addaction name="actionBlur"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuDisplay"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -97,6 +109,36 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionColor">
+   <property name="text">
+    <string>Color</string>
+   </property>
+  </action>
+  <action name="actionNormal">
+   <property name="text">
+    <string>Normal</string>
+   </property>
+  </action>
+  <action name="actionPosition">
+   <property name="text">
+    <string>Position</string>
+   </property>
+  </action>
+  <action name="actionDepth">
+   <property name="text">
+    <string>Depth</string>
+   </property>
+  </action>
+  <action name="actionFinal_Light">
+   <property name="text">
+    <string>Final Light</string>
+   </property>
+  </action>
+  <action name="actionBlur">
+   <property name="text">
+    <string>Blur</string>
    </property>
   </action>
  </widget>
