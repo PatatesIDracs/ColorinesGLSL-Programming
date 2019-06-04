@@ -61,8 +61,8 @@ void OpenGLWidget::initializeGL()
 
 
     program.create();
-    program.addShaderFromSourceFile(QOpenGLShader::Vertex, "vertex_shader.vert");
-    program.addShaderFromSourceFile(QOpenGLShader::Fragment, "fragment_shader.frag");
+    program.addShaderFromSourceFile(QOpenGLShader::Vertex, "Shaders/color_vert_shader.vert");
+    program.addShaderFromSourceFile(QOpenGLShader::Fragment, "Shaders/color_frag_shader.frag");
     program.link();
 
     InitDefered();
