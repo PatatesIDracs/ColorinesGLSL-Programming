@@ -22,7 +22,7 @@ void main(void)
 
     VSOut.normalLocalspace = (projectionMatrix*vec4(normal,0)).xyz;
 
-    gl_Position = projectionMatrix*vec4((worldViewMatrix*vec4(position, 1)).xyz, 1.0);
+    gl_Position = projectionMatrix*worldViewMatrix*vec4(position, 1);
 
     VSOut.positionWorld = (projectionMatrix*vec4(position, 1)).xyz;
 }
