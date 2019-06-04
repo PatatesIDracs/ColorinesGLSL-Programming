@@ -66,6 +66,8 @@ void OpenGLWidget::initializeGL()
     program.link();
 
     InitDefered();
+    InitBlur();
+    InitLight();
 
     blurProgram.create();
     blurProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "Shaders/blur_vert_shader.vert");
@@ -182,6 +184,44 @@ void OpenGLWidget::InitDefered()
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, screen_width, screen_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, colorTexture,0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT1,GL_TEXTURE_2D, normalTexture,0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT2,GL_TEXTURE_2D, posTexture,0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_TEXTURE_2D, depthTexture,0); 
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+    switch (status)
+    {
+    case GL_FRAMEBUFFER_COMPLETE://Everything'sOK
+        qDebug() << "Framebuffer is Veri gut patates amb suc";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+        qDebug() << "FramebufferERROR: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+        qDebug() << "Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_UNSUPPORTED:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_UNSUPPORTED";
+        break;
+    default:
+        qDebug() << "Framebuffer ERROR: Unknown ERROR";
+        break;
+    }
+}
+
+void OpenGLWidget::InitBlur()
+{
+
     glGenTextures(1, &partialBlurTexture);
     glBindTexture(GL_TEXTURE_2D, partialBlurTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
@@ -190,18 +230,55 @@ void OpenGLWidget::InitDefered()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, colorTexture,0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT1,GL_TEXTURE_2D, normalTexture,0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT2,GL_TEXTURE_2D, posTexture,0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_TEXTURE_2D, depthTexture,0);
-
     glGenFramebuffers(1, &blurfbo);
     glBindFramebuffer(GL_FRAMEBUFFER, blurfbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, partialBlurTexture,0);
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+     qDebug() << "Blur framebuffer state";
+
+    switch (status)
+    {
+    case GL_FRAMEBUFFER_COMPLETE://Everything'sOK
+        qDebug() << "Framebuffer is Veri gut patates amb suc";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+        qDebug() << "FramebufferERROR: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+        qDebug() << "Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_UNSUPPORTED:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_UNSUPPORTED";
+        break;
+    default:
+        qDebug() << "Framebuffer ERROR: Unknown ERROR";
+        break;
+    }
+}
+
+void OpenGLWidget::InitLight()
+{
+    glGenTextures(1, &lightTexture);
+    glBindTexture(GL_TEXTURE_2D, lightTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glGenFramebuffers(1, &lightFbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, lightFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, lightTexture,0);
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+     qDebug() << "Blur framebuffer state";
 
     switch (status)
     {
@@ -267,6 +344,33 @@ void OpenGLWidget::BlurShader()
 
 }
 
+void OpenGLWidget::LightShader()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER,lightFbo);
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+    lightProgram.bind();
+    lightProgram.setUniformValue("colorTex", 0);
+    lightProgram.setUniformValue("normalTex", 1);
+    lightProgram.setUniformValue("posTex", 2);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, normalTexture);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, posTexture);
+
+    vao.bind();
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    vao.release();
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    lightProgram.release();
+}
+
 void OpenGLWidget::UpdateScene()
 {
     camera->Update();
@@ -286,12 +390,17 @@ void OpenGLWidget::resizeGL(int w, int h)
     glDeleteTextures(1, &normalTexture);
     glDeleteTextures(1, &posTexture);
     glDeleteTextures(1, &depthTexture);
-    glDeleteTextures(1, &partialBlurTexture);
-
     glDeleteFramebuffers(1, &fbo);
+
+    glDeleteTextures(1, &partialBlurTexture);
     glDeleteFramebuffers(1, &blurfbo);
 
+    glDeleteTextures(1, &lightTexture);
+    glDeleteFramebuffers(1, &lightFbo);
+
     InitDefered();
+    InitBlur();
+    InitLight();
 }
 
 void OpenGLWidget::paintGL()
@@ -343,41 +452,43 @@ void OpenGLWidget::paintGL()
        program.release();
     }
 
+    LightShader();
+
     if(displayMode == DisplayMode::BLUR)
         BlurShader();
 
     QOpenGLFramebufferObject::bindDefault();
-
-
-
-   //lightProgram.bind();
-   //lightProgram.setUniformValue("colorTex", 0);
-   //lightProgram.setUniformValue("normalTex", 1);
-   //lightProgram.setUniformValue("posTex", 2);
-   //glActiveTexture(GL_TEXTURE0);
-   //glBindTexture(GL_TEXTURE_2D, colorTexture);
-   //glActiveTexture(GL_TEXTURE1);
-   //glBindTexture(GL_TEXTURE_2D, normalTexture);
-   //glActiveTexture(GL_TEXTURE2);
-   //glBindTexture(GL_TEXTURE_2D, posTexture);
-   //
-   //vao.bind();
-   //glDrawArrays(GL_TRIANGLES, 0, 6);
-   //vao.release();
-   //
-   //glBindTexture(GL_TEXTURE_2D, 0);
-   //glActiveTexture(GL_TEXTURE1);
-   //glBindTexture(GL_TEXTURE_2D, 0);
-   //glActiveTexture(GL_TEXTURE0);
-   //glBindTexture(GL_TEXTURE_2D, 0);
-   //lightProgram.release();
 
    glClearColor(0.0f,0.0f,0.0f,1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
    quadProgram.bind();
    quadProgram.setUniformValue("colorTexture", 0);
    glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D, colorTexture);
+   switch (displayMode)
+   {
+    case COLOR:
+       glBindTexture(GL_TEXTURE_2D, colorTexture);
+       break;
+   case NORMALS:
+       glBindTexture(GL_TEXTURE_2D, normalTexture);
+       break;
+   case POSITION:
+       glBindTexture(GL_TEXTURE_2D, posTexture);
+       break;
+   case DEPTH:
+       glBindTexture(GL_TEXTURE_2D, depthTexture);
+       break;
+   case BLUR:
+       glBindTexture(GL_TEXTURE_2D, colorTexture);
+       break;
+   case LIGHT:
+       glBindTexture(GL_TEXTURE_2D, lightTexture);
+       break;
+   default:
+       glBindTexture(GL_TEXTURE_2D, lightTexture);
+       break;
+   }
+
    vao.bind();
    glDrawArrays(GL_TRIANGLES, 0, 6);
    vao.release();
