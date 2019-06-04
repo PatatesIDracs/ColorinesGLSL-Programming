@@ -230,12 +230,52 @@ void OpenGLWidget::InitBlur()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
-    glGenFramebuffers(1, &blurfbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, blurfbo);
+    glGenFramebuffers(1, &partialBlurfbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, partialBlurfbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, partialBlurTexture,0);
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
      qDebug() << "Blur framebuffer state";
+
+    switch (status)
+    {
+    case GL_FRAMEBUFFER_COMPLETE://Everything'sOK
+        qDebug() << "Framebuffer is Veri gut patates amb suc";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+        qDebug() << "FramebufferERROR: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+        qDebug() << "Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_UNSUPPORTED:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_UNSUPPORTED";
+        break;
+    default:
+        qDebug() << "Framebuffer ERROR: Unknown ERROR";
+        break;
+    }
+
+    glGenTextures(1, &completeBlurTexture);
+    glBindTexture(GL_TEXTURE_2D, completeBlurTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glGenFramebuffers(1, &completeBlurFbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, completeBlurFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, completeBlurTexture,0);
+
+    status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    qDebug() << " Complete Blur framebuffer state";
 
     switch (status)
     {
@@ -312,7 +352,7 @@ void OpenGLWidget::BlurShader()
 
     if(blurProgram.bind())
     {
-       glBindFramebuffer(GL_FRAMEBUFFER,blurfbo);
+       glBindFramebuffer(GL_FRAMEBUFFER,partialBlurfbo);
        glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
        blurProgram.setUniformValue("colorTexture", 0 );
@@ -326,7 +366,7 @@ void OpenGLWidget::BlurShader()
 
        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-       glBindFramebuffer(GL_FRAMEBUFFER,lightFbo);
+       glBindFramebuffer(GL_FRAMEBUFFER,completeBlurFbo);
        glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
        blurProgram.setUniformValue("colorTexture", 0 );
@@ -393,7 +433,9 @@ void OpenGLWidget::resizeGL(int w, int h)
     glDeleteFramebuffers(1, &fbo);
 
     glDeleteTextures(1, &partialBlurTexture);
-    glDeleteFramebuffers(1, &blurfbo);
+    glDeleteFramebuffers(1, &partialBlurfbo);
+    glDeleteTextures(1, &completeBlurTexture);
+    glDeleteFramebuffers(1, &completeBlurFbo);
 
     glDeleteTextures(1, &lightTexture);
     glDeleteFramebuffers(1, &lightFbo);
@@ -479,7 +521,7 @@ void OpenGLWidget::paintGL()
        glBindTexture(GL_TEXTURE_2D, depthTexture);
        break;
    case BLUR:
-       glBindTexture(GL_TEXTURE_2D, lightTexture);
+       glBindTexture(GL_TEXTURE_2D, completeBlurTexture);
        break;
    case LIGHT:
        glBindTexture(GL_TEXTURE_2D, lightTexture);

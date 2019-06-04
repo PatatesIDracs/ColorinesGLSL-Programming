@@ -115,7 +115,9 @@ private:
     GLuint fbo;
 
     GLuint partialBlurTexture;
-    GLuint blurfbo;
+    GLuint partialBlurfbo;
+    GLuint completeBlurTexture;
+    GLuint completeBlurFbo;
 
     GLuint lightTexture;
     GLuint lightFbo;
