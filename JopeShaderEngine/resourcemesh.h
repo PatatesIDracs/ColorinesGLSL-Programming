@@ -6,6 +6,7 @@
 
 
 #include <QVector>
+class QOpenGLShaderProgram;
 
 struct aiNode;
 struct aiScene;
@@ -25,7 +26,7 @@ public:
     bool LoadModel(QString fileName);
 
     void Bind();
-    void Draw();
+    void Draw(QOpenGLShaderProgram* program);
     void UnBind();
 
 private:

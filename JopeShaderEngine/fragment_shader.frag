@@ -30,7 +30,7 @@ void main(void)
 
     if(hasTexture)
         albedo = texture2D(albedoTexture, FSIn.textCoord);
-    else albedo = vec4(0.8);
+    else albedo = vec4(1, 0, 0.5, 1);
 
     ambient = albedo * ambientTerm;
     ambient.a = 1.0f;

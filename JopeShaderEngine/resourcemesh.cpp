@@ -7,6 +7,8 @@
 
 #include <QFileDialog>
 #include <QOpenGLWidget>
+#include <QOpenGLShaderProgram>
+
 
 ResourceMesh::ResourceMesh(unsigned int id) : Resource(RESOURCE_TYPE::RESOURCE_MESH, id)
 {
@@ -85,12 +87,16 @@ void ResourceMesh::Bind()
     }
 }
 
-void ResourceMesh::Draw()
+void ResourceMesh::Draw(QOpenGLShaderProgram* program)
 {
     if(isLoaded())
     {
         for(uint i = 0; i < submeshes.size(); i++)
         {
+            if(!submeshes[i]->matResource)
+                program->setUniformValue("hasTexture", false);
+            else program->setUniformValue("hasTexture", true);
+
             submeshes[i]->Draw();
         }
     }

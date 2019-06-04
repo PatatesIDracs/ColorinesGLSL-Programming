@@ -317,7 +317,7 @@ void OpenGLWidget::BlurShader()
 
        blurProgram.setUniformValue("colorTexture", 0 );
        glActiveTexture(GL_TEXTURE0);
-       glBindTexture(GL_TEXTURE_2D, colorTexture);
+       glBindTexture(GL_TEXTURE_2D, lightTexture);
 
        blurProgram.setUniformValue("texCoordsInc", 1.0/screen_width, 0);
        vaoblur.bind();
@@ -326,7 +326,7 @@ void OpenGLWidget::BlurShader()
 
        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-       glBindFramebuffer(GL_FRAMEBUFFER,fbo);
+       glBindFramebuffer(GL_FRAMEBUFFER,lightFbo);
        glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
        blurProgram.setUniformValue("colorTexture", 0 );
@@ -445,7 +445,7 @@ void OpenGLWidget::paintGL()
 
             if(rMesh)
             {
-                rMesh->Draw();
+                rMesh->Draw(&program);
             }
 
         }
@@ -479,7 +479,7 @@ void OpenGLWidget::paintGL()
        glBindTexture(GL_TEXTURE_2D, depthTexture);
        break;
    case BLUR:
-       glBindTexture(GL_TEXTURE_2D, colorTexture);
+       glBindTexture(GL_TEXTURE_2D, lightTexture);
        break;
    case LIGHT:
        glBindTexture(GL_TEXTURE_2D, lightTexture);
