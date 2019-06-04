@@ -81,7 +81,9 @@ DISTFILES += \
     Shaders/light_vert_shader.vert \
     Shaders/light_frag_shader.frag \
     Shaders/blur_frag_shader.frag \
-    Shaders/blur_vert_shader.vert
+    Shaders/blur_vert_shader.vert \
+    Shaders/depth_field_vert_shader.vert \
+    Shaders/depth_field_frag_shader.frag
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimpd

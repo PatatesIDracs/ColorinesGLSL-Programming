@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionDepth, SIGNAL(triggered()), ui->openGLWidget, SLOT(SetDisplayDepth()));
     connect(ui->actionFinal_Light, SIGNAL(triggered()), ui->openGLWidget, SLOT(SetDisplayLight()));
     connect(ui->actionBlur, SIGNAL(triggered()), ui->openGLWidget, SLOT(SetDisplayBlur()));
+    connect(ui->actionDepth_of_Field, SIGNAL(triggered()), ui->openGLWidget, SLOT(SetDisplayDoF()));
 }
 
 MainWindow::~MainWindow()

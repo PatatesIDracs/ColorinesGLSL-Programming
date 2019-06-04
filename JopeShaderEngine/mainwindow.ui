@@ -40,6 +40,7 @@
     <addaction name="actionDepth"/>
     <addaction name="actionFinal_Light"/>
     <addaction name="actionBlur"/>
+    <addaction name="actionDepth_of_Field"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDisplay"/>
@@ -139,6 +140,11 @@
   <action name="actionBlur">
    <property name="text">
     <string>Blur</string>
+   </property>
+  </action>
+  <action name="actionDepth_of_Field">
+   <property name="text">
+    <string>Depth of Field</string>
    </property>
   </action>
  </widget>

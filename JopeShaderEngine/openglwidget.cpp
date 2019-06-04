@@ -68,6 +68,7 @@ void OpenGLWidget::initializeGL()
     InitDefered();
     InitBlur();
     InitLight();
+    InitDepthOfField();
 
     blurProgram.create();
     blurProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "Shaders/blur_vert_shader.vert");
@@ -107,6 +108,11 @@ void OpenGLWidget::initializeGL()
     vboblur.release();
 
     blurProgram.release();
+
+    dofProgram.create();
+    dofProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "Shaders/depth_field_vert_shader.vert");
+    dofProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "Shaders/depth_field_frag_shader.frag");
+    dofProgram.link();
 
     //Create light program
     lightProgram.create();
@@ -346,6 +352,49 @@ void OpenGLWidget::InitLight()
     }
 }
 
+void OpenGLWidget::InitDepthOfField()
+{
+    glGenTextures(1, &depthOfFieldTexture);
+    glBindTexture(GL_TEXTURE_2D, depthOfFieldTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glGenFramebuffers(1, &depthOfFieldFbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthOfFieldFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, depthOfFieldTexture,0);
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    qDebug() << "Depth of field framebuffer state";
+
+    switch (status)
+    {
+    case GL_FRAMEBUFFER_COMPLETE://Everything'sOK
+        qDebug() << "Framebuffer is Veri gut patates amb suc";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+        qDebug() << "FramebufferERROR: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+        qDebug() << "Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+        break;
+    case GL_FRAMEBUFFER_UNSUPPORTED:
+        qDebug()<<"Framebuffer ERROR:GL_FRAMEBUFFER_UNSUPPORTED";
+        break;
+    default:
+        qDebug() << "Framebuffer ERROR: Unknown ERROR";
+        break;
+    }
+}
+
 void OpenGLWidget::BlurShader()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -363,8 +412,6 @@ void OpenGLWidget::BlurShader()
        vaoblur.bind();
        glDrawArrays(GL_TRIANGLES, 0, 6);
        vaoblur.release();
-
-       glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
        glBindFramebuffer(GL_FRAMEBUFFER,completeBlurFbo);
        glDrawBuffer(GL_COLOR_ATTACHMENT0);
@@ -411,6 +458,33 @@ void OpenGLWidget::LightShader()
     lightProgram.release();
 }
 
+void OpenGLWidget::DepthOfFieldShader()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER,depthOfFieldFbo);
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+    dofProgram.bind();
+    dofProgram.setUniformValue("lightTexture", 0);
+    dofProgram.setUniformValue("bluredTexture", 1);
+    dofProgram.setUniformValue("depthTexture", 2);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, lightTexture);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, completeBlurTexture);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+
+    vao.bind();
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    vao.release();
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    dofProgram.release();
+}
+
 void OpenGLWidget::UpdateScene()
 {
     camera->Update();
@@ -437,12 +511,16 @@ void OpenGLWidget::resizeGL(int w, int h)
     glDeleteTextures(1, &completeBlurTexture);
     glDeleteFramebuffers(1, &completeBlurFbo);
 
+    glDeleteTextures(1, &depthOfFieldTexture);
+    glDeleteFramebuffers(1, &depthOfFieldFbo);
+
     glDeleteTextures(1, &lightTexture);
     glDeleteFramebuffers(1, &lightFbo);
 
     InitDefered();
     InitBlur();
     InitLight();
+    InitDepthOfField();
 }
 
 void OpenGLWidget::paintGL()
@@ -494,10 +572,12 @@ void OpenGLWidget::paintGL()
        program.release();
     }
 
-    LightShader();
-
-    if(displayMode == DisplayMode::BLUR)
+    LightShader(); 
+    if(displayMode == DisplayMode::BLUR || displayMode == DisplayMode::DOF)
+    {
         BlurShader();
+        DepthOfFieldShader();
+    }
 
     QOpenGLFramebufferObject::bindDefault();
 
@@ -525,6 +605,9 @@ void OpenGLWidget::paintGL()
        break;
    case LIGHT:
        glBindTexture(GL_TEXTURE_2D, lightTexture);
+       break;
+   case DOF:
+       glBindTexture(GL_TEXTURE_2D, depthOfFieldTexture);
        break;
    default:
        glBindTexture(GL_TEXTURE_2D, lightTexture);
@@ -589,6 +672,11 @@ void OpenGLWidget::SetDisplayLight()
 void OpenGLWidget::SetDisplayBlur()
 {
     displayMode = DisplayMode::BLUR;
+}
+
+void OpenGLWidget::SetDisplayDoF()
+{
+    displayMode = DisplayMode::DOF;
 }
 
 void OpenGLWidget::keyPressEvent(QKeyEvent *event)

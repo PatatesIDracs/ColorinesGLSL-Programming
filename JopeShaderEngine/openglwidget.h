@@ -28,7 +28,8 @@ enum DisplayMode
     POSITION,
     DEPTH,
     LIGHT,
-    BLUR
+    BLUR,
+    DOF
 };
 
 class OpenGLWidget :
@@ -50,9 +51,11 @@ public:
     void InitDefered();
     void InitBlur();
     void InitLight();
+    void InitDepthOfField();
 
     void BlurShader();
     void LightShader();
+    void DepthOfFieldShader();
 
     QVector<ResourceMaterial*>* matResources;
 
@@ -69,6 +72,7 @@ public slots:
     void SetDisplayDepth();
     void SetDisplayLight();
     void SetDisplayBlur();
+    void SetDisplayDoF();
 
 
 private:
@@ -83,6 +87,7 @@ private:
     QOpenGLShaderProgram quadProgram;
     QOpenGLShaderProgram blurProgram;
     QOpenGLShaderProgram lightProgram;
+    QOpenGLShaderProgram dofProgram;
 
     QMap<unsigned int, CompMeshRenderer*> objects;
 
@@ -118,6 +123,9 @@ private:
     GLuint partialBlurfbo;
     GLuint completeBlurTexture;
     GLuint completeBlurFbo;
+
+    GLuint depthOfFieldTexture;
+    GLuint depthOfFieldFbo;
 
     GLuint lightTexture;
     GLuint lightFbo;
