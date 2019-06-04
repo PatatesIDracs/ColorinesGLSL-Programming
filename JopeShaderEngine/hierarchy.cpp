@@ -94,22 +94,20 @@ void Hierarchy::InitBaseModel()
         material = CreateMaterial(path + "sponza_crytek/textures/sponza_column_c_diff.png");
         mesh->submeshes[6]->matResource = material;
         material = CreateMaterial(path + "sponza_crytek/textures/sponza_curtain_blue_diff.png");
-        mesh->submeshes[15]->matResource = material;
+        mesh->submeshes[17]->matResource = material;
         material = CreateMaterial(path + "sponza_crytek/textures/sponza_curtain_diff.png");
         mesh->submeshes[12]->matResource = material;
-        mesh->submeshes[16]->matResource = material;
+        mesh->submeshes[18]->matResource = material;
         material = CreateMaterial(path + "sponza_crytek/textures/sponza_curtain_green_diff.png");
-        mesh->submeshes[14]->matResource = material;
+        mesh->submeshes[19]->matResource = material;
         material = CreateMaterial(path + "sponza_crytek/textures/sponza_details_diff.png");
         mesh->submeshes[10]->matResource = material;
         material = CreateMaterial(path + "sponza_crytek/textures/sponza_fabric_blue_diff.png");
-        mesh->submeshes[17]->matResource = material;
-        material = CreateMaterial(path + "sponza_crytek/textures/sponza_fabric_diff.png");
-        mesh->submeshes[18]->matResource = material;
-        material = CreateMaterial(path + "sponza_crytek/textures/sponza_fabric_green_diff.png");
-        mesh->submeshes[19]->matResource = material;
-        material = CreateMaterial(path + "sponza_crytek/textures/sponza_fabric_purple.png");
         mesh->submeshes[14]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_fabric_diff.png");
+        mesh->submeshes[15]->matResource = material;
+        material = CreateMaterial(path + "sponza_crytek/textures/sponza_fabric_green_diff.png");
+        mesh->submeshes[16]->matResource = material;
         material = CreateMaterial(path + "sponza_crytek/textures/sponza_flagpole_diff.png");
         mesh->submeshes[13]->matResource = material;
         material = CreateMaterial(path + "sponza_crytek/textures/sponza_floor_a_diff.png");
@@ -148,6 +146,7 @@ void Hierarchy::CreateNewGO()
 
 void Hierarchy::RemoveGO()
 {
+    GameObject* toDelete = selected;
     for(int i = 0; i < objects.size(); i++)
     {
         if(objects[i] == selected)
@@ -155,13 +154,20 @@ void Hierarchy::RemoveGO()
             objects.remove(i);
             delete ui->listWidget->takeItem(i);
 
-            (i > 0) ? (i < objects.size())? selected = objects[i]: selected = objects[i-1] : selected = nullptr;
+            (i > 0) ? ((i < objects.size())? selected = objects[i]: selected = objects[i-1]) : selected = nullptr;
 
             break;
         }
     }
 
     SigHierarchyUpdate(selected);
+
+    if(toDelete)
+    {
+        emit SigRemoveObject(toDelete);
+        delete toDelete;
+    }
+
 }
 
 void Hierarchy::OnItemClicked()

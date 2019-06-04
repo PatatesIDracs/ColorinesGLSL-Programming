@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLoadTexture, SIGNAL(triggered()), hierarchy, SLOT(LoadTexture()));
     connect(hierarchy,SIGNAL(SigHierarchyUpdate(GameObject*)), inspector, SLOT(ItemSelected(GameObject*)));
     connect(hierarchy, SIGNAL(SigResourceUpdate(GameObject*)), ui->openGLWidget, SLOT(AddGameObject(GameObject*)));
+    connect(hierarchy, SIGNAL(SigRemoveObject(GameObject*)), ui->openGLWidget, SLOT(RemoveGameObject(GameObject*)));
     connect(ui->openGLWidget, SIGNAL(OpenGLInitialized()), hierarchy, SLOT(InitBaseModel()));
 
     //Displat modes

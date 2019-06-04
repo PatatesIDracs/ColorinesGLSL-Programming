@@ -638,6 +638,15 @@ void OpenGLWidget::AddGameObject(GameObject *obj)
     }
 }
 
+void OpenGLWidget::RemoveGameObject(GameObject *obj)
+{
+    CompMeshRenderer* renderer = static_cast<CompMeshRenderer*>(obj->GetComponentByType(COMP_TYPE::COMP_MESHRENDER));
+    if(renderer)
+    {
+       objects.remove(static_cast<unsigned int>(obj->id));
+    }
+}
+
 void OpenGLWidget::finalizeGL()
 {
     //vao.release();

@@ -31,6 +31,7 @@ public:
 signals:
      void SigHierarchyUpdate(GameObject*);
      void SigResourceUpdate(GameObject*);
+     void SigRemoveObject(GameObject*);
 
 public slots:
 

@@ -64,6 +64,7 @@ signals:
 public slots:
     void UpdateScene();
     void AddGameObject(GameObject* obj);
+    void RemoveGameObject(GameObject* obj);
     void finalizeGL();
 
     void SetDisplayColor();
