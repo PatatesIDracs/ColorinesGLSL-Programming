@@ -25,22 +25,29 @@ void main(void)
 
     if(depth < nearFalloff)
     {
-        outColor = vec4(0,1,1,1);
-
+        vec4 blured = texture2D(bluredTexture, FSIn.texCoords);
+        vec4 light = texture2D(lightTexture, FSIn.texCoords);
+        //blured = vec4(0,1,1,1);
+        float ratio = (nearFalloff - depth) /(nearFalloff - nearVision);
+        outColor = mix(light, blured, ratio);
+        //outColor = vec4(0,1,1,1);
         if(depth < nearVision )
-             outColor = vec4(0,0,1,1);
+             outColor = texture2D(bluredTexture, FSIn.texCoords);
     }
     else if (depth > farFalloff)
     {
-        outColor = vec4(1,1,0,1);
-
+        vec4 blured = texture2D(bluredTexture, FSIn.texCoords);
+        vec4 light = texture2D(lightTexture, FSIn.texCoords);
+        float ratio = (farVision - depth) /(farVision - farFalloff);
+        //blured = vec4(1,1,0,1);
+        outColor = mix(blured, light, ratio);
+        //outColor = vec4(1,1,0,1);
         if(depth > farVision)
-            outColor = vec4(0,1,0,1);
+            outColor = texture2D(bluredTexture, FSIn.texCoords);
     }
     else
     {
-        outColor = vec4(1,0,1,1);
-        //outColor = texture2D(lightTexture, FSIn.texCoords);
+        outColor = texture2D(lightTexture, FSIn.texCoords);
     }
 
 }
