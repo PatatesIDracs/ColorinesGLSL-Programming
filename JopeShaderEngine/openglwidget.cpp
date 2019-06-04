@@ -22,6 +22,7 @@ QOpenGLFunctions_3_3_Core * gl = nullptr;
 OpenGLWidget::OpenGLWidget(QWidget* parent):
     QOpenGLWidget (parent)
 {
+    displayMode = DisplayMode::LIGHT;
     screen_width = width();
     screen_height = height();
     gl = this;
