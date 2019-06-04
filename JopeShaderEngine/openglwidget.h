@@ -38,6 +38,7 @@ public:
 
 
     void InitDefered();
+    void BlurShader();
 
     QVector<ResourceMaterial*>* matResources;
 
@@ -89,9 +90,10 @@ private:
     GLuint normalTexture;
     GLuint depthTexture;
     GLuint posTexture;
-    GLuint partialBlurTexture;
-    GLuint blurTexture;
     GLuint fbo;
+
+    GLuint partialBlurTexture;
+    GLuint blurfbo;
 
     int screen_width;
     int screen_height;

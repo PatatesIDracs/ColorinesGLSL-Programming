@@ -138,9 +138,6 @@ void OpenGLWidget::initializeGL()
     glVertexAttribPointer(2,compCount,GL_FLOAT, GL_FALSE, strideBytes, (void*)(offsetBytes2));
 
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     vao.release();
     vbo.release();
 
@@ -193,23 +190,16 @@ void OpenGLWidget::InitDefered()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
-    glGenTextures(1, &blurTexture);
-    glBindTexture(GL_TEXTURE_2D, blurTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-
     glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, colorTexture,0);
     glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT1,GL_TEXTURE_2D, normalTexture,0);
     glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT2,GL_TEXTURE_2D, posTexture,0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT3,GL_TEXTURE_2D, partialBlurTexture,0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT4,GL_TEXTURE_2D, blurTexture,0);
     glFramebufferTexture2D(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_TEXTURE_2D, depthTexture,0);
 
+    glGenFramebuffers(1, &blurfbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, blurfbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, partialBlurTexture,0);
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -239,6 +229,44 @@ void OpenGLWidget::InitDefered()
     }
 }
 
+void OpenGLWidget::BlurShader()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    if(blurProgram.bind())
+    {
+       glBindFramebuffer(GL_FRAMEBUFFER,blurfbo);
+       glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+       blurProgram.setUniformValue("colorTexture", 0 );
+       glActiveTexture(GL_TEXTURE0);
+       glBindTexture(GL_TEXTURE_2D, colorTexture);
+
+       blurProgram.setUniformValue("texCoordsInc", 1.0/screen_width, 0);
+       vaoblur.bind();
+       glDrawArrays(GL_TRIANGLES, 0, 6);
+       vaoblur.release();
+
+       glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+       glBindFramebuffer(GL_FRAMEBUFFER,fbo);
+       glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+       blurProgram.setUniformValue("colorTexture", 0 );
+       glActiveTexture(GL_TEXTURE0);
+       glBindTexture(GL_TEXTURE_2D, partialBlurTexture);
+
+       blurProgram.setUniformValue("texCoordsInc", 0, 1.0/screen_height);
+       vaoblur.bind();
+       glDrawArrays(GL_TRIANGLES, 0, 6);
+       vaoblur.release();
+
+
+       blurProgram.release();
+    }
+
+}
+
 void OpenGLWidget::UpdateScene()
 {
     camera->Update();
@@ -259,9 +287,9 @@ void OpenGLWidget::resizeGL(int w, int h)
     glDeleteTextures(1, &posTexture);
     glDeleteTextures(1, &depthTexture);
     glDeleteTextures(1, &partialBlurTexture);
-    glDeleteTextures(1, &blurTexture);
 
     glDeleteFramebuffers(1, &fbo);
+    glDeleteFramebuffers(1, &blurfbo);
 
     InitDefered();
 }
@@ -311,38 +339,12 @@ void OpenGLWidget::paintGL()
        program.release();
     }
 
-    glDisable(GL_DEPTH_TEST);
-    if(blurProgram.bind())
-    {
-       glDrawBuffer(GL_COLOR_ATTACHMENT3);
+    BlurShader();
 
-       blurProgram.setUniformValue("colorTexture", 0 );
-       glActiveTexture(GL_TEXTURE0);
-       glBindTexture(GL_TEXTURE_2D, colorTexture);
-
-       blurProgram.setUniformValue("texCoordsInc", 1.0/screen_width, 0);
-       vaoblur.bind();
-       glDrawArrays(GL_TRIANGLES, 0, 6);
-
-       glDrawBuffer(GL_COLOR_ATTACHMENT4);
-       //QOpenGLFramebufferObject::bindDefault();
-
-       blurProgram.setUniformValue("colorTexture", 0 );
-       glActiveTexture(GL_TEXTURE0);
-       glBindTexture(GL_TEXTURE_2D, partialBlurTexture);
-
-       blurProgram.setUniformValue("texCoordsInc", 0, 1.0/screen_height);
-       glDrawArrays(GL_TRIANGLES, 0, 6);
-        vaoblur.release();
-
-        blurProgram.release();
-    }
-
-   QOpenGLFramebufferObject::bindDefault();
+    QOpenGLFramebufferObject::bindDefault();
 
 
-   //glClearColor(0.0f,0.0f,0.0f,0.0f);
-   //glClear(GL_COLOR_BUFFER_BIT);
+
    //lightProgram.bind();
    //lightProgram.setUniformValue("colorTex", 0);
    //lightProgram.setUniformValue("normalTex", 1);
